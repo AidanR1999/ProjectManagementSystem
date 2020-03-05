@@ -22,7 +22,18 @@ app.get('/', function (req, res) {
 });
 
 app.get('/projects/', function (req, res) {
-    res.render('projects', {})
+    res.render('projects', {
+        "projects": [
+            {
+                "Title" : "Web Platform Application",
+                "Module" : "Web Platform Development"
+            },
+            {
+                "Title": "IP3 Wireframes",
+                "Module": "Integrated Project 3"
+            }
+        ]
+    });
 });
 
 app.listen(app.get('port'), function () {
