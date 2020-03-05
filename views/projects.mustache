@@ -9,6 +9,14 @@
 <script src="https://kit.fontawesome.com/2cf49272b2.js" crossorigin="anonymous"></script>
 </head>
 
+<h1>My Projects</h1>
+
+<div class="span2">
+    <a href="/project/create">
+        <p>Create new Project</p>
+    </a>
+</div>
+
 {{#projects}}
     <br><br>
     <div class="container-fluid well span6">
@@ -19,7 +27,7 @@
             </div>
             
             <div class="span9">
-                <a href="project/edit/{{Id}}">
+                <a href="/project/edit/{{Id}}">
                     <h3>{{Title}}</h3>
                 </a>
                 <h6>{{Module}}</h6>

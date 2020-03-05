@@ -56,6 +56,10 @@ app.get('/project/edit/:projectId', function (req, res) {
     });
 });
 
+app.get('/project/create', function (req, res) {
+    res.render('create', {});
+});
+
 app.listen(app.get('port'), function () {
     console.log('Express started on http://localhost:' + app.get('port') +
         '; press Ctrl-C to terminate.');
