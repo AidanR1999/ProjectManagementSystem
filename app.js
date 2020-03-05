@@ -25,14 +25,34 @@ app.get('/projects/', function (req, res) {
     res.render('projects', {
         "projects": [
             {
+                "Id" : 1,
                 "Title" : "Web Platform Application",
-                "Module" : "Web Platform Development"
+                "Module" : "Web Platform Development",
+                "DueDate": "02/11/2020",
+                "CompletionDate" : null
             },
             {
+                "Id" : 2,
                 "Title": "IP3 Wireframes",
-                "Module": "Integrated Project 3"
+                "Module": "Integrated Project 3",
+                "DueDate": "11/09/2020",
+                "CompletionDate" : "05/03/2020"
+            },
+            {
+                "Id" : 3,
+                "Title": "RSIP Poster",
+                "Module": "Research Skills and Professional Issues",
+                "DueDate": "13/03/2020",
+                "CompletionDate" : "04/03/2020"
             }
         ]
+    });
+});
+
+app.get('/project/edit/:projectId', function (req, res) {
+    var id = req.params.projectId;
+    res.render('edit', {
+        "Id" : id
     });
 });
 

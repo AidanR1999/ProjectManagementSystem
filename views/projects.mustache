@@ -1,8 +1,45 @@
 {{>header}}
 
+<head>
+<!--Bootstrap dependencies-->
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!--Font Awesome 5-->
+<script src="https://kit.fontawesome.com/2cf49272b2.js" crossorigin="anonymous"></script>
+</head>
+
 {{#projects}}
-    <p><b>Title:</b> {{Title}}</p>
-    <p><b>Module:</b> {{Module}}</p>
+    <br><br>
+    <div class="container-fluid well span6">
+    
+        <div class="row-fluid">
+            <div class="span1">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <div class="span9">
+                <a href="project/edit/{{Id}}">
+                    <h3>{{Title}}</h3>
+                </a>
+                <h6>{{Module}}</h6>
+                <h6>{{DueDate}}</h6>
+            </div>
+            
+            <div class="span2">
+                <div class="btn-group">
+                    <a class="btn dropdown-toggle btn-info" data-toggle="dropdown" href="#">
+                        Action 
+                        <span class="icon-cog icon-white"></span><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><span class="icon-wrench"></span> Modify</a></li>
+                        <li><a href="#"><span class="icon-trash"></span> Delete</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 {{/projects}}
 
 {{>footer}}
