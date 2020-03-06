@@ -52,7 +52,43 @@ app.get('/projects/', function (req, res) {
 app.get('/project/edit/:projectId', function (req, res) {
     var id = req.params.projectId;
     res.render('edit', {
-        "Id" : id
+        "categories": [
+            {
+                "id": 1,
+                "name" : "Backlog",
+                "milestones": [
+                    {
+                        "mileName": "Create projects page",
+                        "completionDate" : null,
+                    },
+                    {
+                        "mileName": "Create profile builder",
+                        "completionDate" : null,
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "name" : "To be complete",
+                "milestones": [
+                    {
+                        "mileName": "Create home page",
+                        "completionDate" : null,
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "name" : "Completed",
+                "milestones": [
+                    {
+                        "mileName": "Start adobe XD",
+                        "completionDate" : "06/03/2020",
+                    },
+                ]
+            }
+
+        ]
     });
 });
 
