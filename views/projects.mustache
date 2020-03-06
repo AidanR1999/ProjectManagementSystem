@@ -7,6 +7,7 @@
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <!--Font Awesome 5-->
     <script src="https://kit.fontawesome.com/2cf49272b2.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.6.0/Sortable.js"></script>
 </head>
 <div class="container">
     <div class="row">
@@ -23,36 +24,51 @@
         </div>
     </div>
 </div>
-
-{{#projects}}
-    <br><br>
-    <div class="container">
-        <div class="row">
-            <div class="container well span6">
-                <div class="col-sm"></div>
-                <div class="row-fluid">
-                    <div class="span1">
-                        <i class="fas fa-bars"></i>
-                    </div>
-                    
-                    <div class="span9">
-                        <a href="/project/edit/{{Id}}">
-                            <h3>{{Title}}</h3>
-                        </a>
-                        <h6>{{Module}}</h6>
-                        <h6>{{DueDate}}</h6>
-                    </div>
-                    
-                    <div class="span2">
-                        <button type="button" href="#" class="btn btn-danger">
-                            <span class="icon-trash"></span> Delete</a>
-                        </button>
+<ul style="list-style-type:none;" id="items">
+    {{#projects}}
+        <li>
+            <div class="container">
+                <div class="row">
+                    <div class="container well span6">
+                        <div class="col-sm"></div>
+                        <div class="row-fluid">
+                            <div class="span1">
+                                <i class="fas fa-bars"></i>
+                            </div>
+                            
+                            <div class="span9">
+                                <a href="/project/edit/{{Id}}">
+                                    <h3>{{Title}}</h3>
+                                </a>
+                                <h6>{{Module}}</h6>
+                                <h6>{{DueDate}}</h6>
+                            </div>
+                            
+                            <div class="span2">
+                                <button type="button" href="#" class="btn btn-danger">
+                                    <span class="icon-trash"></span> Delete</a>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-sm"></div>
                     </div>
                 </div>
-                <div class="col-sm"></div>
             </div>
-        </div>
-    </div>
+        </li>
+    
 {{/projects}}
+</ul>
+
+<script>
+    window.addEventListener('load', function() {
+    var el = document.getElementById('items');
+    new Sortable(el, {
+    handle: '.fas.fa-bars', // handle's class
+    ghostClass: "sortable-ghost",
+    });
+    })
+    
+
+</script>
 
 {{>footer}}

@@ -23,7 +23,7 @@ class Seed {
         "title": "Web Application",
         "Module": "Web platform",
         "dueDate" : "20/11/2020",
-        "userId": docs._id
+        "userId": "wwe"
       };
 
       console.log(docs);
