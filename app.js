@@ -3,6 +3,8 @@
 var express = require('express');
 var mustache = require("mustache-express");
 var path = require("path");
+var Seed = require("./data/seed");
+let seed = new Seed();
 
 //express
 //====================================================================
@@ -99,7 +101,10 @@ app.get('/project/create', function (req, res) {
     res.render('create', {});
 });
 
-app.listen(app.get('port'), function () {
-    console.log('Express started on http://localhost:' + app.get('port') +
-        '; press Ctrl-C to terminate.');
+app.listen(app.get("port"), function() {
+  console.log(
+    "Express started on http://localhost:" +
+      app.get("port") +
+      "; press Ctrl-C to terminate."
+  );
 });
