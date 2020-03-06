@@ -8,6 +8,17 @@
             </div>
         {{/categories}}
     </div>
+    {{#rows}}
+        <div class="row">
+            {{#milestones}}
+                <div class="col-sm">
+                    <p>{{mileName}}</p>
+                </div>
+            {{/milestones}}
+        </div>
+    {{/rows}}
 </div>
+
+
 
 {{>footer}}
