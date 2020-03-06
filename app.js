@@ -4,7 +4,6 @@ var express = require('express');
 var mustache = require("mustache-express");
 var path = require("path");
 var Seed = require("./data/seed");
-let seed = new Seed();
 
 //express
 //====================================================================
@@ -16,6 +15,12 @@ app.set('port', process.env.PORT || 3000);
 app.engine("mustache", mustache());
 app.set("view engine", "mustache");
 app.set("views", path.resolve(__dirname, "views"));
+
+//seed database
+//====================================================================
+let seed = new Seed();
+//seed.initUser();
+seed.initProjects();
 
 //routes
 //====================================================================
