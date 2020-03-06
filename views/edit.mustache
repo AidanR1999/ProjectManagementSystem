@@ -1,5 +1,13 @@
 {{>header}}
 
-{{Id}}
+<div class="container">
+    <div class="row">
+        {{#categories}}
+            <div class="col-sm">
+                <p>{{name}}</p>
+            </div>
+        {{/categories}}
+    </div>
+</div>
 
 {{>footer}}
