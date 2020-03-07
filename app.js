@@ -19,7 +19,7 @@ app.set("views", path.resolve(__dirname, "views"));
 //seed database
 //====================================================================
 let seed = new Seed();
-//seed.initUser();
+seed.initUser();
 seed.initProjects();
 
 //routes

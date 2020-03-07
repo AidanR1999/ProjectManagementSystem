@@ -1,10 +1,10 @@
 const Datastore = require("nedb");
 
 class DbContext {
-  Users = {};
-  Projects = {};
-  Milestones = {};
-  Categories = {};
+  // Users = {};
+  // Projects = {};
+  // Milestones = {};
+  // Categories = {};
 
   constructor() {
     this.Users = new Datastore("./data/users.db");
