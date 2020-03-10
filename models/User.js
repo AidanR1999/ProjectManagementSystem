@@ -17,30 +17,21 @@ class User {
         this.passwordSalt = passwordSalt
     }
 
-    //custom functions
-    verifyPasswordHash(password) {
-
+    constructor(firstName, lastName, email, passwordHash, passwordSalt) {
+        this.firstName = firstName,
+        this.lastName = lastName,
+        this.email = email,
+        this.passwordHash = passwordHash,
+        this.passwordSalt = passwordSalt
     }
 
-    //getters and setters
-    getId() {
-        return this.id;
+    //custom functions
+    verifyPasswordHash(password) {
+        //implement
     }
 
     getFullName() {
         return this.firstName + " " + this.lastName;
-    }
-
-    getEmail() {
-        return this.email;
-    }
-    
-    setFirstName(name) {
-        this.firstName = name;
-    }
-
-    setLastName(name) {
-        this.lastName = name;
     }
 }
 module.exports = User;
