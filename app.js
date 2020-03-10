@@ -26,12 +26,12 @@ let seedAll = () => {
   seed.initProjects();
 }
 
-//seedAll;
+seedAll;
 
 //routes
 //====================================================================
-const authRouter = require('./routes/auth');
-const projectRouter = require('./routes/project');
+const authRouter = require('./routes/authRoutes');
+const projectRouter = require('./routes/projectRoutes');
 
 app.use('/', authRouter);
 app.use('/project', projectRouter);
