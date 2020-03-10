@@ -1,16 +1,14 @@
-const _context = new DbContext();
+const DbContext = require("./DbContext");
+let _context = new DbContext();
 
 class DatabaseAO {
     //user functions
     //====================================================================
-    createHashPassword(passwordObject) {
-        //implement
-    }
     login(email, password) {
         //implement
     }
     register(user, password) {
-        //implement
+        
     }
 
     //project functions
