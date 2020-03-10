@@ -1,13 +1,13 @@
 //require
 //====================================================================
-var express = require('express');
-var mustache = require("mustache-express");
-var path = require("path");
-var Seed = require("./data/seed");
+const express = require('express');
+const mustache = require("mustache-express");
+const path = require("path");
+const Seed = require("./data/seed");
 
 //express
 //====================================================================
-var app = express();
+const app = express();
 
 //configure
 //====================================================================
@@ -15,97 +15,35 @@ app.set('port', process.env.PORT || 3000);
 app.engine("mustache", mustache());
 app.set("view engine", "mustache");
 app.set("views", path.resolve(__dirname, "views"));
+app.use(express.static(path.join(__dirname, 'public')));
 
 //seed database
 //====================================================================
 let seed = new Seed();
 //seed.initUser();
-seed.initProjects();
+//seed.initProjects();
 
 //routes
 //====================================================================
-app.get('/', function (req, res) {
-    res.render('home', {})
-});
+const authRouter = require('./routes/auth');
+const projectRouter = require('./routes/project');
 
-app.get('/projects/', function (req, res) {
-    res.render('projects', {
-        "projects": [
-            {
-                "Id" : 1,
-                "Title" : "Web Platform Application",
-                "Module" : "Web Platform Development",
-                "DueDate": "02/11/2020",
-                "CompletionDate" : null
-            },
-            {
-                "Id" : 2,
-                "Title": "IP3 Wireframes",
-                "Module": "Integrated Project 3",
-                "DueDate": "11/09/2020",
-                "CompletionDate" : "05/03/2020"
-            },
-            {
-                "Id" : 3,
-                "Title": "RSIP Poster",
-                "Module": "Research Skills and Professional Issues",
-                "DueDate": "13/03/2020",
-                "CompletionDate" : "04/03/2020"
-            }
-        ]
-    });
-});
+app.use('/', authRouter);
+app.use('/project', projectRouter);
 
-app.get('/project/edit/:projectId', function (req, res) {
-    var id = req.params.projectId;
-    res.render('edit', {
-            "categories": [
-                {
-                    "id": 1,
-                    "name" : "Backlog"
-                },
-                {
-                    "id": 2,
-                    "name" : "To be complete",
-                },
-                {
-                    "id": 3,
-                    "name" : "Completed",
-                }
-            ],
-            "rows": [
-                {
-                    "milestones":[
-                        {
-                            "mileName": "Create projects page",
-                            "completionDate" : null,
-                        },
-                        {
-                            "mileName": "Create home page",
-                            "completionDate" : null,
-                        },
-                        {
-                            "mileName": "Start adobe XD",
-                            "completionDate" : "06/03/2020",
-                        }
-                    ]
-                },
-                {
-                    "milestones":[
-                        {
-                            "mileName": "Create profile builder",
-                            "completionDate" : null,
-                        }
-                    ]
-                }
-            ]
-    });
-});
+//404 requests
+app.use(function (req, res, next) {
+  res.status(404).send("Sorry can't find that!")
+})
 
-app.get('/project/create', function (req, res) {
-    res.render('create', {});
-});
+//error handler
+app.use(function (err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
 
+//start server
+//====================================================================
 app.listen(app.get("port"), function() {
   console.log(
     "Express started on http://localhost:" +
@@ -113,3 +51,5 @@ app.listen(app.get("port"), function() {
       "; press Ctrl-C to terminate."
   );
 });
+
+module.exports = app;
