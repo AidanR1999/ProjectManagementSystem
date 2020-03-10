@@ -20,8 +20,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 //seed database
 //====================================================================
 let seed = new Seed();
-//seed.initUser();
-//seed.initProjects();
+
+let seedAll = () => {
+  seed.initUser();
+  seed.initProjects();
+}
+
+//seedAll;
 
 //routes
 //====================================================================
