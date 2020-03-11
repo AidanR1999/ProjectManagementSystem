@@ -29,7 +29,7 @@ router.get('/index', function (req, res) {
    });
 });
 
-router.get('/project/edit/:projectId', function (req, res) {
+router.get('/edit/:projectId', function (req, res) {
    var id = req.params.projectId;
    res.render('edit', {
            "categories": [
@@ -75,7 +75,7 @@ router.get('/project/edit/:projectId', function (req, res) {
    });
 });
 
-router.get('/project/create', function (req, res) {
+router.get('/create', function (req, res) {
    res.render('create', {});
 });
 
