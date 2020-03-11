@@ -1,6 +1,5 @@
 const DbContext = require("./DbContext");
 var bcrypt = require('bcryptjs');
-var config = require("../config");
 
 let _context = new DbContext();
 
@@ -10,7 +9,7 @@ class DatabaseAO {
     login(email, password) {
         //implement
     }
-    register(user, password) {
+    register(user, password, callback) {
         _context.Users.find({email: user.email}, function(err, docs) {
             if(Object.keys(docs).length == 0) {
                 //hash the password
@@ -21,8 +20,14 @@ class DatabaseAO {
                     if(err) {
                         console.log("broke");
                     }
+                    callback(docs);
                 });
             }
+        });
+    }
+    getUserByEmail(email, callback) {
+        _context.Users.findOne({email: email}, function(err, docs) {
+            callback(docs);
         });
     }
 
