@@ -1,4 +1,5 @@
 const DbContext = require("./DbContext");
+const bcrypt = require('bcryptjs');
 let _context = new DbContext();
 
 //create user
@@ -6,7 +7,7 @@ lukasz = {
   firstName: "Lukasz",
   lastName: "Bonkowski",
   email: "test1@test.com",
-  password: "icecream2"
+  password: bcrypt.hashSync("icecream2", 8)
 };
 
 

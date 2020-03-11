@@ -10,13 +10,7 @@ class User {
 
     //custom functions
     verifyPasswordHash(password) {
-        //hash new password
-        password = bcrypt.hashSync(password, 8);
-
-        //compare passwords
-        if(password === this.passwordHash)
-            return true;
-        return false;
+        return bcrypt.compareSync(password, this.passwordHash);
     }
 
     getFullName() {

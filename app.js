@@ -59,8 +59,6 @@ app.use(function(req, res, next) {
       if(err) {
         res.redirect("/");
       } else {
-        //get user data
-        req.user = data;
         next();
       }
     });
