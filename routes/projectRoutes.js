@@ -1,82 +1,52 @@
 var express = require('express');
+var Database = require("../data/DatabaseAO");
+var Project = require('../models/Project');
+var jwt = require('jsonwebtoken');
+var config = require("../config");
+
+var _dbo = new Database();
 var router = express.Router();
 
 router.get('/index', function (req, res) {
-   res.render('projects', {
-       "projects": [
-           {
-               "Id" : 1,
-               "Title" : "Web Platform application",
-               "Module" : "Web Platform Development",
-               "DueDate": "02/11/2020",
-               "CompletionDate" : null
-           },
-           {
-               "Id" : 2,
-               "Title": "IP3 Wireframes",
-               "Module": "Integrated Project 3",
-               "DueDate": "11/09/2020",
-               "CompletionDate" : "05/03/2020"
-           },
-           {
-               "Id" : 3,
-               "Title": "RSIP Poster",
-               "Module": "Research Skills and Professional Issues",
-               "DueDate": "13/03/2020",
-               "CompletionDate" : "04/03/2020"
-           }
-       ]
-   });
+    //get logged in user
+    var token = req.cookies.auth;
+    jwt.verify(token, config.secret, function(err, data) {
+        _dbo.getUserProjects(data.id, function(projects) {
+            console.log(projects);
+            res.render('projects', {
+                "projects": projects}
+                );
+        })
+    });
 });
 
 router.get('/edit/:projectId', function (req, res) {
    var id = req.params.projectId;
-   res.render('edit', {
-           "categories": [
-               {
-                   "id": 1,
-                   "name" : "Backlog"
-               },
-               {
-                   "id": 2,
-                   "name" : "To be complete",
-               },
-               {
-                   "id": 3,
-                   "name" : "Completed",
-               }
-           ],
-           "rows": [
-               {
-                   "milestones":[
-                       {
-                           "mileName": "Create projects page",
-                           "completionDate" : null,
-                       },
-                       {
-                           "mileName": "Create home page",
-                           "completionDate" : null,
-                       },
-                       {
-                           "mileName": "Start adobe XD",
-                           "completionDate" : "06/03/2020",
-                       }
-                   ]
-               },
-               {
-                   "milestones":[
-                       {
-                           "mileName": "Create profile builder",
-                           "completionDate" : null,
-                       }
-                   ]
-               }
-           ]
-   });
+   res.render('edit', {});
 });
 
 router.get('/create', function (req, res) {
    res.render('create', {});
+});
+
+router.post('/create', function(req, res) {
+    //get logged in user
+    var token = req.cookies.auth;
+    jwt.verify(token, config.secret, function(err, data) {
+        //create project
+        var project = new Project();
+        project.title = req.body.title;
+        project.module = req.body.module;
+        project.dueDate = new Date(req.body.dueDate);
+        project.ownerId = data.id
+
+        //add project to db
+        _dbo.createProject(project, function(newProject) {
+            res.redirect('/project/index');
+        });
+    });
+
+    
 });
 
 module.exports = router;

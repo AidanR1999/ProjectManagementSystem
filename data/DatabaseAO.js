@@ -48,22 +48,30 @@ class DatabaseAO {
 
     //project functions
     //====================================================================
-    getProject(id) {
+    getProject(id, callback) {
+        _context.Projects.findOne({_id: id}, function(err, docs) {
+            callback(docs);
+        });
+    }
+    getUserProjects(userId, callback) {
+        _context.Projects.find({ownerId: userId}, function(err, docs) {
+            callback(docs);
+        });
+    }
+    createProject(project, callback) {
+        _context.Projects.insert(project, function(err, docs) {
+            if(err)
+                console.log("failed to insert");
+            callback(docs);
+        });
+    }
+    updateProject(project, callback) {
         //implement
     }
-    getUserProjects(userId) {
-        //implement
+    deleteProject(id, callback) {
+        _context.Projects.remove({_id: id}, )
     }
-    createProject(project) {
-        //implement
-    }
-    updateProject(project) {
-        //implement
-    }
-    deleteProject(id) {
-        //implement
-    }
-    changeProjectPosition(project) {
+    changeProjectPosition(project, callback) {
         //implement
     }
 
