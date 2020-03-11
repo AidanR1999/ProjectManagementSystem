@@ -14,19 +14,20 @@ class Seed {
   constructor() {}
 
   async initUser() {
-    await _context.Users.insert(lukasz, function(err, docs) {});
+    await _context.Users.insert(lukasz, function(err, doc) {});
+    //console.log(doc);
   }
 
   async initProjects() {
-    await _context.Users.findOne({"email": "test1@test.com"}, async function(err, docs){
+    await _context.Users.findOne({email: 'test1@test.com'}, async function(err, doc){
       var project = {
         "title": "Web Application",
         "Module": "Web platform",
         "dueDate" : "20/11/2020",
-        "userId": docs._id
+        "userId": doc._id
       };
 
-      console.log(docs);
+      console.log(doc);
 
       await _context.Projects.insert(project, async function(err, newDoc) {
         console.log(newDoc);
