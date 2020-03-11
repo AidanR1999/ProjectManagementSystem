@@ -7,17 +7,18 @@ var config = require("../config");
 var _dbo = new Database();
 var router = express.Router();
 
-router.get('/index', function (req, res) {
+router.get('/', function (req, res) {
     //get logged in user
     var token = req.cookies.auth;
     jwt.verify(token, config.secret, function(err, data) {
         _dbo.getUserProjects(data.id, function(projects) {
-            console.log(projects);
             res.render('projects', {
                 "projects": projects}
                 );
+            return;
         })
     });
+    return;
 });
 
 router.get('/edit/:projectId', function (req, res) {
@@ -42,11 +43,15 @@ router.post('/create', function(req, res) {
 
         //add project to db
         _dbo.createProject(project, function(newProject) {
-            res.redirect('/project/index');
+            res.redirect('/project/');
         });
     });
+});
 
-    
+router.post('/delete', function(req, res) {
+    _dbo.deleteProject(req.body.id, function(newProject) {
+        res.redirect('/project/');
+    });
 });
 
 module.exports = router;

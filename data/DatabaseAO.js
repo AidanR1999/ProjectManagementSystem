@@ -60,8 +60,10 @@ class DatabaseAO {
     }
     createProject(project, callback) {
         _context.Projects.insert(project, function(err, docs) {
-            if(err)
+            if(err) {
                 console.log("failed to insert");
+                return;
+            }   
             callback(docs);
         });
     }
@@ -69,7 +71,10 @@ class DatabaseAO {
         //implement
     }
     deleteProject(id, callback) {
-        _context.Projects.remove({_id: id}, )
+        _context.Projects.remove({_id: id}, {}, function(err, numRemoved) {
+            callback();
+            return;
+        });
     }
     changeProjectPosition(project, callback) {
         //implement
