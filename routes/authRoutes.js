@@ -12,7 +12,7 @@ router.get('/', function (req, res) {
     //check if user has token
     var token = req.cookies.auth;
     if(token) {
-        res.redirect('/project/index')
+        res.redirect('/project/')
         return;
     }
     //else render home
@@ -27,7 +27,7 @@ router.post('/login', function(req, res) {
         if(user) {
             var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
-            res.redirect('/project/index');
+            res.redirect('/project/');
             return;
         }
         //else redirect back
@@ -48,7 +48,7 @@ router.post('/register', function(req, res) {
         //send token
         var token = jwt.sign(user, config.secret, {expiresIn: 86400});
         res.cookie('auth', token);
-        res.redirect('/project/index');
+        res.redirect('/project/');
     });
 });
 
