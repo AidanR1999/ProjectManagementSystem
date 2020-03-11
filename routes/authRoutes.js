@@ -26,7 +26,9 @@ router.post('/login', function(req, res) {
             var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
             res.redirect('/project/index');
+            return;
         }
+        res.redirect('/');
     });
 });
 
