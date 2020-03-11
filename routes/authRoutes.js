@@ -16,11 +16,13 @@ router.get('/', function (req, res) {
 
 //login
 router.post('/login', function(req, res) {
-
+    console.log(req.body.email);
+    console.log(req.body.password);
 });
 
 //register
 router.post('/register', function(req, res) {
+    console.log(req.body);
     //create user object
     var user = new User();
     user.firstName = req.body.firstName;
@@ -32,12 +34,16 @@ router.post('/register', function(req, res) {
     
     //insert the user
     _context.Users.insert(user, function(err, docs) {
+        if(err) {
+            console.log("broke");
+        }
         //create token
         var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
-        res.status(200).send({
-            auth: true,
-            token: token
-        });
+        // res.status(200).send({
+        //     auth: true,
+        //     token: token
+        // });
+        res.redirect('/project/index');
     });
 });
 
