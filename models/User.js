@@ -1,6 +1,7 @@
+var bcrypt = require('bcryptjs');
+
 class User {
     constructor() {
-        this.id = "";
         this.firstName = "";
         this.lastName = "";
         this.email = "";
@@ -9,7 +10,13 @@ class User {
 
     //custom functions
     verifyPasswordHash(password) {
-        //implement
+        //hash new password
+        password = bcrypt.hashSync(password, 8);
+
+        //compare passwords
+        if(password === this.passwordHash)
+            return true;
+        return false;
     }
 
     getFullName() {
