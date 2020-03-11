@@ -4,6 +4,9 @@ const express = require('express');
 const mustache = require("mustache-express");
 const path = require("path");
 const Seed = require("./data/seed");
+var cookieParser = require('cookie-parser')
+var jwt = require('jsonwebtoken');
+var config = require("./config");
 
 //express
 //====================================================================
@@ -23,6 +26,9 @@ app.use(express.urlencoded());
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
 
+//allow cookies
+app.use(cookieParser());
+
 //seed database
 //====================================================================
 let seed = new Seed();
@@ -32,15 +38,41 @@ let seedAll = () => {
   seed.initProjects();
 }
 
-seedAll;
+//seedAll();
 
 //routes
 //====================================================================
 const authRouter = require('./routes/authRoutes');
 const projectRouter = require('./routes/projectRoutes');
 
+//auth
 app.use('/', authRouter);
+
+//token checker middleware
+app.use(function(req, res, next) {
+  var token = req.cookies.auth;
+
+  //check if token exists
+  if(token) {
+    //verify token
+    jwt.verify(token, config.secret, function(err, data) {
+      if(err) {
+        res.redirect("/");
+      } else {
+        //get user data
+        req.user = data;
+        next();
+      }
+    });
+  } else {
+    res.redirect("/");
+  }
+});
+
+//project
 app.use('/project', projectRouter);
+
+
 
 //404 requests
 app.use(function (req, res, next) {
