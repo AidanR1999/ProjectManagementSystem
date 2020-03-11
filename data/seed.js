@@ -31,7 +31,6 @@ class Seed {
       await _context.Projects.insert(project, async function(err, proj) {
         
         var category1 = {
-          _id : 1,
           name : 'In progress',
           position : 0,
           projectId : proj._id
@@ -39,7 +38,6 @@ class Seed {
         await _context.Categories.insert(category1, async function(err, cat){
           var milestone1 = {
             name : 'Design stage complete',
-            _id : 1,
             completionDate: '10/03/2020',
             position : 0,
             projectId : proj._id,
