@@ -1,13 +1,11 @@
 var express = require('express');
 var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
-var config = require("../config");
 var User = require("../models/User");
-const DbContext = require("../Data/DbContext");
+var Database = require("../data/DatabaseAO");
 
 
 var router = express.Router();
-let _context = new DbContext();
+var _dbo = new Database();
 
 //home page
 router.get('/', function (req, res) {
@@ -22,29 +20,16 @@ router.post('/login', function(req, res) {
 
 //register
 router.post('/register', function(req, res) {
-    console.log(req.body);
     //create user object
     var user = new User();
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
-    user.email = req.body.lastName;
+    user.email = req.body.email;
 
-    //hash the password
-    user.passwordHash = bcrypt.hashSync(req.body.password, 8);
-    
-    //insert the user
-    _context.Users.insert(user, function(err, docs) {
-        if(err) {
-            console.log("broke");
-        }
-        //create token
-        var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
-        // res.status(200).send({
-        //     auth: true,
-        //     token: token
-        // });
-        res.redirect('/project/index');
-    });
+    //register user
+    _dbo.register(user, req.body.password);
+
+    res.redirect('/project/index');
 });
 
 module.exports = router;
