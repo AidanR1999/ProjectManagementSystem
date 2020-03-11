@@ -21,13 +21,16 @@ router.get('/', function (req, res) {
 
 //login
 router.post('/login', function(req, res) {
+    //attempt login
     _dbo.login(req.body.email, req.body.password, function(user) {
+        //if successful send token
         if(user) {
             var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
             res.redirect('/project/index');
             return;
         }
+        //else redirect back
         res.redirect('/');
     });
 });
@@ -42,13 +45,16 @@ router.post('/register', function(req, res) {
 
     //register user
     _dbo.register(user, req.body.password, function(user) {
+        //send token
         var token = jwt.sign(user, config.secret, {expiresIn: 86400});
         res.cookie('auth', token);
         res.redirect('/project/index');
     });
 });
 
+//logout
 router.get('/logout', function(req, res) {
+    //clear token
     res.cookie('auth', "");
     res.redirect('/');
 })
