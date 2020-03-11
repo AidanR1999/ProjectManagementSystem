@@ -1,7 +1,9 @@
 var express = require('express');
 var jwt = require('jsonwebtoken');
+var config = require("../config");
 var User = require("../models/User");
 var Database = require("../data/DatabaseAO");
+
 
 
 var router = express.Router();
@@ -14,8 +16,11 @@ router.get('/', function (req, res) {
 
 //login
 router.post('/login', function(req, res) {
-    console.log(req.body.email);
-    console.log(req.body.password);
+    //get the user
+    _dbo.getUserByEmail("test1@test.com", function(user) {
+        var token = jwt.sign(user, config.secret, {expiresIn: 86400});
+        res.cookie('auth', token);
+    });
 });
 
 //register
@@ -27,9 +32,11 @@ router.post('/register', function(req, res) {
     user.email = req.body.email;
 
     //register user
-    _dbo.register(user, req.body.password);
-
-    res.redirect('/project/index');
+    _dbo.register(user, req.body.password, function(user) {
+        var token = jwt.sign(user, config.secret, {expiresIn: 86400});
+        res.cookie('auth', token);
+        res.redirect('/project/index');
+    });
 });
 
 module.exports = router;
