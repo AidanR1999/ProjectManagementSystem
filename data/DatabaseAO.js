@@ -33,6 +33,20 @@ class DatabaseAO {
             }
         });
     }
+
+    getUserById(id, callback) {
+        _context.Users.findOne({_id: id}, function(err, docs) {
+            var user = new User();
+            user._id = docs._id;
+            user.firstName = docs.firstName;
+            user.lastName = docs.lastName;
+            user.email = docs.email;
+            user.passwordHash = docs.passwordHash;
+
+            callback(user);
+        });
+    }
+
     getUserByEmail(email, callback) {
         _context.Users.findOne({email: email}, function(err, docs) {
             var user = new User();
