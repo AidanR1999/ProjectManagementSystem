@@ -8,7 +8,7 @@ var router = express.Router();
 var _dbo = new Database();
 
 //home page
-router.get('/', function (req, res) {
+router.get('/', function(req, res) {
     //check if user has token
     var token = req.cookies.auth;
     if(token) {
@@ -17,6 +17,19 @@ router.get('/', function (req, res) {
     }
     //else render home
     res.render('home', {})
+});
+
+router.get('/account', function(req, res) {
+    //get logged in user
+    var token = req.cookies.auth;
+    jwt.verify(token, config.secret, function(err, data) {
+        _dbo.getUserById(data.id, function(user) {
+            res.render('account', user);
+            return;
+        })
+        return;
+    });
+    return;
 });
 
 //login
