@@ -58,13 +58,17 @@ app.use(function(req, res, next) {
     jwt.verify(token, config.secret, function(err, data) {
       if(err) {
         res.redirect("/");
+        return;
       } else {
         next();
+        return;
       }
     });
   } else {
     res.redirect("/");
+    return;
   }
+  return;
 });
 
 //project
@@ -75,12 +79,14 @@ app.use('/project', projectRouter);
 //404 requests
 app.use(function (req, res, next) {
   res.status(404).send("Sorry can't find that!")
+  return;
 })
 
 //error handler
 app.use(function (err, req, res, next) {
   console.error(err.stack)
   res.status(500).send('Something broke!')
+  return;
 })
 
 //start server

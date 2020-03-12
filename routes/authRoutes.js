@@ -17,8 +17,10 @@ router.get('/', function(req, res) {
     }
     //else render home
     res.render('home', {})
+    return;
 });
 
+//account settings
 router.get('/account', function(req, res) {
     //get logged in user
     var token = req.cookies.auth;
@@ -45,6 +47,7 @@ router.post('/login', function(req, res) {
         }
         //else redirect back
         res.redirect('/');
+        return;
     });
 });
 
@@ -58,18 +61,48 @@ router.post('/register', function(req, res) {
 
     //register user
     _dbo.register(user, req.body.password, function(user) {
-        //send token
-        var token = jwt.sign(user, config.secret, {expiresIn: 86400});
-        res.cookie('auth', token);
-        res.redirect('/project/');
+        if(user) {
+            //send token
+            var token = jwt.sign(user, config.secret, {expiresIn: 86400});
+            res.cookie('auth', token);
+            res.redirect('/project/');
+            return;
+        } else {
+            res.redirect('/');
+        }
     });
+    return;
 });
+
+//update account details
+router.post('/update', function(req, res) {
+    //get logged in user
+    var token = req.cookies.auth;
+
+    //create object
+    var user = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
+    }
+
+    jwt.verify(token, config.secret, function(err, data) {
+        user._id = data.id;
+        _dbo.updateUserDetails(user, function(user) {
+            res.redirect('/account');
+            return;
+        })
+        return;
+    });
+    return;
+});
+//change password
 
 //logout
 router.get('/logout', function(req, res) {
     //clear token
     res.cookie('auth', "");
     res.redirect('/');
+    return;
 })
 
 module.exports = router;

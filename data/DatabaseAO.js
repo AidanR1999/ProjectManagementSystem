@@ -12,10 +12,13 @@ class DatabaseAO {
         this.getUserByEmail(email, function(user) {
             if(user.verifyPasswordHash(password)) {
                 callback(user);
+                return;
             } else {
                 callback();
+                return;
             }
         });
+        return;
     }
     register(user, password, callback) {
         _context.Users.find({email: user.email}, function(err, docs) {
@@ -29,12 +32,19 @@ class DatabaseAO {
                         console.log("broke");
                     }
                     callback(docs);
+                    return;
                 });
+            } else {
+                callback(null);
+                return;
             }
+            return;
         });
+        return
     }
 
     getUserById(id, callback) {
+        //find the user
         _context.Users.findOne({_id: id}, function(err, docs) {
             var user = new User();
             user._id = docs._id;
@@ -44,10 +54,13 @@ class DatabaseAO {
             user.passwordHash = docs.passwordHash;
 
             callback(user);
+            return;
         });
+        return;
     }
 
     getUserByEmail(email, callback) {
+        //find the user
         _context.Users.findOne({email: email}, function(err, docs) {
             var user = new User();
             user._id = docs._id;
@@ -57,7 +70,36 @@ class DatabaseAO {
             user.passwordHash = docs.passwordHash;
 
             callback(user);
+            return;
         });
+        return;
+    }
+
+    updateUserDetails(user, callback) {
+        //update user details in db
+        _context.Users.update({ _id: user._id }, //where to change
+                             { $set: { firstName: user.firstName, lastName: user.lastName } }, //what to change
+                             {}, //options
+                             function(err, user) { //function
+                                callback(user);
+                                return;
+                             });
+        return;
+    }
+
+    changePassword(id, password, callback) {
+        //hash new password
+        var passwordHash = bcrypt.hashSync(password, 8);
+
+        //update in db
+        _context.Users.update({ _id: id }, //where to change
+                             { $set: { passwordHash: passwordHash } }, //what to change
+                             {}, //options
+                             function(err, user) { //function
+                                callback(user);
+                                return;
+                             });
+        return;
     }
 
     //project functions
@@ -65,12 +107,16 @@ class DatabaseAO {
     getProject(id, callback) {
         _context.Projects.findOne({_id: id}, function(err, docs) {
             callback(docs);
+            return;
         });
+        return;
     }
     getUserProjects(userId, callback) {
         _context.Projects.find({ownerId: userId}, function(err, docs) {
             callback(docs);
+            return;
         });
+        return;
     }
     createProject(project, callback) {
         _context.Projects.insert(project, function(err, docs) {
@@ -79,7 +125,9 @@ class DatabaseAO {
                 return;
             }   
             callback(docs);
+            return;
         });
+        return;
     }
     updateProject(project, callback) {
         //implement
@@ -89,6 +137,7 @@ class DatabaseAO {
             callback();
             return;
         });
+        return;
     }
     changeProjectPosition(project, callback) {
         //implement
