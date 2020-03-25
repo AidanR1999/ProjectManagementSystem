@@ -7,137 +7,158 @@ let _context = new DbContext();
 class DatabaseAO {
     //user functions
     //====================================================================
-    login(email, password, callback) {
-        //get the user
-        this.getUserByEmail(email, function(user) {
-            if(user.verifyPasswordHash(password)) {
-                callback(user);
-                return;
-            } else {
-                callback();
-                return;
-            }
+    login(email, password) {
+        return new Promise((resolve, reject) => {
+            //get the user
+            this.getUserByEmail(email, (user) => {
+                if(user.verifyPasswordHash(password)) {
+                    resolve(user);
+                } else {
+                    reject();
+                }
+            });
+        })
+    }
+    
+    register(user, password) {
+        return new Promise((resolve, reject) => {
+            _context.Users.find({email: user.email}, (err, docs) => {
+                if(Object.keys(docs).length == 0) {
+                    //hash the password
+                    user.passwordHash = bcrypt.hashSync(password, 8);
+                    
+                    //insert the user
+                    _context.Users.insert(user, (err, nUser) => {
+                        if(err) {
+                            reject(err);
+                            console.log("could not insert user")
+                        }
+                        resolve(nUser);
+                    });
+                } else {
+                    reject(err);
+                    console.log("could not load users")
+                }
+            });
         });
-        return;
+        
     }
-    register(user, password, callback) {
-        _context.Users.find({email: user.email}, function(err, docs) {
-            if(Object.keys(docs).length == 0) {
-                //hash the password
-                user.passwordHash = bcrypt.hashSync(password, 8);
-                
-                //insert the user
-                _context.Users.insert(user, function(err, docs) {
-                    if(err) {
-                        console.log("broke");
-                    }
-                    callback(docs);
-                    return;
-                });
-            } else {
-                callback(null);
-                return;
-            }
-            return;
+
+    getUserById(id) {
+        return new Promise((resolve, reject) => {
+            //find the user
+            _context.Users.findOne({_id: id}, (err, doc) => {
+                if(err) {
+                    reject(err);
+                    console("could not find user");
+                } else {
+                    var user = new User();
+                    user._id = doc._id;
+                    user.firstName = doc.firstName;
+                    user.lastName = doc.lastName;
+                    user.email = doc.email;
+                    user.passwordHash = doc.passwordHash;
+
+                    resolve(user);
+                }
+            });
         });
-        return
+        
     }
 
-    getUserById(id, callback) {
-        //find the user
-        _context.Users.findOne({_id: id}, function(err, docs) {
-            var user = new User();
-            user._id = docs._id;
-            user.firstName = docs.firstName;
-            user.lastName = docs.lastName;
-            user.email = docs.email;
-            user.passwordHash = docs.passwordHash;
+    getUserByEmail(email) {
+        return new Promise((resolve, reject) => {
+            //find the user
+            _context.Users.findOne({email: email}, (err, doc) => {
+                if(err) {
+                    reject(err);
+                    console.log("user could not be found");
+                } else {
+                    var user = new User();
+                    user._id = doc._id;
+                    user.firstName = doc.firstName;
+                    user.lastName = doc.lastName;
+                    user.email = doc.email;
+                    user.passwordHash = doc.passwordHash;
 
-            callback(user);
-            return;
+                    resolve(user);
+                }
+            });
+        })
+    }
+
+    updateUserDetails(user) {
+        return new Promise((resolve, reject) => {
+            //update user details in db
+            _context.Users.update({ _id: user._id }, //where to change
+                    { $set: { firstName: user.firstName, lastName: user.lastName } }, //what to change
+                    {}, //options
+                    (err, user) => { //function
+                        if(err) {
+                            reject(err);
+                            console.log("could not update user")
+                        } else {
+                            resolve(user);
+                        }
+                    });
         });
-        return;
+        
     }
 
-    getUserByEmail(email, callback) {
-        //find the user
-        _context.Users.findOne({email: email}, function(err, docs) {
-            var user = new User();
-            user._id = docs._id;
-            user.firstName = docs.firstName;
-            user.lastName = docs.lastName;
-            user.email = docs.email;
-            user.passwordHash = docs.passwordHash;
+    changePassword(id, password) {
+        return new Promise((resolve, reject) => {
+            //hash new password
+            var passwordHash = bcrypt.hashSync(password, 8);
 
-            callback(user);
-            return;
+            //update in db
+            _context.Users.update({ _id: id }, //where to change
+                                { $set: { passwordHash: passwordHash } }, //what to change
+                                {}, //options
+                                (err, user) => { //function
+                                    if(err) {
+                                        reject(err);
+                                        console.log("could not update password");
+                                    } else {
+                                        resolve(user);
+                                    }
+                                });
         });
-        return;
-    }
-
-    updateUserDetails(user, callback) {
-        //update user details in db
-        _context.Users.update({ _id: user._id }, //where to change
-                             { $set: { firstName: user.firstName, lastName: user.lastName } }, //what to change
-                             {}, //options
-                             function(err, user) { //function
-                                callback(user);
-                                return;
-                             });
-        return;
-    }
-
-    changePassword(id, password, callback) {
-        //hash new password
-        var passwordHash = bcrypt.hashSync(password, 8);
-
-        //update in db
-        _context.Users.update({ _id: id }, //where to change
-                             { $set: { passwordHash: passwordHash } }, //what to change
-                             {}, //options
-                             function(err, user) { //function
-                                callback(user);
-                                return;
-                             });
-        return;
     }
 
     //project functions
     //====================================================================
-    getProject(id, callback) {
-        _context.Projects.findOne({_id: id}, function(err, docs) {
-            callback(docs);
-            return;
+    getProject(id) {
+        return new Promise((resolve, reject) => {
+            _context.Projects.findOne({_id: id}, (err, doc) => {
+                if(err) {
+                    reject(err);
+                    console.log("could not find project");
+                } else {
+                    resolve(doc);
+                }
+            });
         });
-        return;
     }
-    getUserProjects(userId, callback) {
-        _context.Projects.find({ownerId: userId}, function(err, docs) {
-            callback(docs);
-            return;
+    getUserProjects(userId) {
+        return new Promise((resolve, reject) => {
+            _context.Projects.find({ownerId: userId}, (err, projects) => {
+                if(err) {
+                    reject(err);
+                    console.log("could not find projects");
+                } else {
+                    resolve(projects);
+                }
+            });
         });
-        return;
     }
-    createProject(project, callback) {
-        _context.Projects.insert(project, function(err, docs) {
-            if(err) {
-                console.log("failed to insert");
-                return;
-            }   
-            callback(docs);
-            return;
-        });
-        return;
+    createProject(project) {
+        _context.Projects.insert(project)
     }
     updateProject(project, callback) {
         //implement
     }
-    deleteProject(id, callback) {
-        _context.Projects.remove({_id: id}, {}, function(err, numRemoved) {
-            callback();
-            return;
-        });
-        return;
+    deleteProject(id) {
+        _context.Projects.remove({_id: id}, {});
     }
     changeProjectPosition(project, callback) {
         //implement

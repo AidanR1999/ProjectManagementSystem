@@ -36,19 +36,17 @@ router.get('/account', function(req, res) {
 
 //login
 router.post('/login', function(req, res) {
-    //attempt login
-    _dbo.login(req.body.email, req.body.password, function(user) {
-        //if successful send token
-        if(user) {
+
+    _dbo.login(req.body.email, req.body.password)
+        .then((user) => {
             var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
             res.redirect('/project/');
-            return;
-        }
-        //else redirect back
-        res.redirect('/');
-        return;
-    });
+        })
+        .catch((err) => {
+            console.log("Error:");
+            console.log(JSON.stringify(err))
+        });
 });
 
 //register
@@ -59,19 +57,17 @@ router.post('/register', function(req, res) {
     user.lastName = req.body.lastName;
     user.email = req.body.email;
 
-    //register user
-    _dbo.register(user, req.body.password, function(user) {
-        if(user) {
+    _dbo.register(user, req.body.password)
+        .then((user) => {
             //send token
             var token = jwt.sign(user, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
             res.redirect('/project/');
-            return;
-        } else {
-            res.redirect('/');
-        }
-    });
-    return;
+        })
+        .catch((err) => {
+            console.log("Error:");
+            console.log(JSON.stringify(err))
+        });
 });
 
 //update account details
@@ -96,6 +92,24 @@ router.post('/update', function(req, res) {
     return;
 });
 //change password
+router.post('/changepassword', function(req, res) {
+    //get logged in user
+    var token = req.cookies.auth;
+    jwt.verify(token, config.secret, function(err, data) {
+        _dbo.changePassword(data.id, req.body.password, function(user) {
+            res.redirect('/account');
+            return;
+        });
+        return;
+    });
+    return;
+});
+
+//delete account
+router.post('/deleteaccount', function(req, res) {
+    res.redirect('/project/');
+    return;
+});
 
 //logout
 router.get('/logout', function(req, res) {

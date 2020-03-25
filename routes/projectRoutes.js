@@ -12,9 +12,15 @@ router.get('/', function (req, res) {
     var token = req.cookies.auth;
     jwt.verify(token, config.secret, function(err, data) {
         _dbo.getUserProjects(data.id, function(projects) {
-            res.render('projects', {
-                "projects": projects}
-                );
+            if(projects) {
+                res.render('projects', {
+                    "projects": projects}
+                    );
+                    return;
+            }
+            res.render('projet;s', {
+                "projects": []
+            });
             return;
         })
     });

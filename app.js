@@ -48,32 +48,31 @@ const projectRouter = require('./routes/projectRoutes');
 //auth
 app.use('/', authRouter);
 
-//token checker middleware
-app.use(function(req, res, next) {
-  var token = req.cookies.auth;
+// //token checker middleware
+// app.use(function(req, res, next) {
+//   var token = req.cookies.auth;
 
-  //check if token exists
-  if(token) {
-    //verify token
-    jwt.verify(token, config.secret, function(err, data) {
-      if(err) {
-        res.redirect("/");
-        return;
-      } else {
-        next();
-        return;
-      }
-    });
-  } else {
-    res.redirect("/");
-    return;
-  }
-  return;
-});
+//   //check if token exists
+//   if(token) {
+//     //verify token
+//     jwt.verify(token, config.secret, function(err, data) {
+//       if(err) {
+//         res.redirect("/");
+//         return;
+//       } else {
+//         next();
+//         return;
+//       }
+//     });
+//   } else {
+//     res.redirect("/");
+//     return;
+//   }
+//   return;
+// });
 
 //project
 app.use('/project', projectRouter);
-
 
 
 //404 requests
