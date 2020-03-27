@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 var config = require("../config");
 
 var _dbo = new Database();
+_dbo.init();
 var router = express.Router();
 
 router.get('/', function (req, res) {
@@ -20,7 +21,7 @@ router.get('/', function (req, res) {
                 .then((projects) => {
                     console.log("got projects");
                     res.render('projects', {
-                            "projects": []}
+                            "projects": projects}
                         );
                 })
                 .catch((err) => {
@@ -33,7 +34,20 @@ router.get('/', function (req, res) {
 
 router.get('/edit/:projectId', function (req, res) {
    var id = req.params.projectId;
-   res.render('edit', {});
+//    var token = req.cookies.auth;
+//     jwt.verify(token, config.secret, (err, data) => {
+//         if(err) {
+//             console.log("could not verify");
+//         } else {
+            
+//             _dbo.getProject(id)
+//             .then((project) => {
+//                 res.render('edit', {
+//                     "milestones" : []
+//                 });
+//             });
+//         };
+//     });
 });
 
 router.get('/create', function (req, res) {
