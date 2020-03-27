@@ -8,23 +8,27 @@ var _dbo = new Database();
 var router = express.Router();
 
 router.get('/', function (req, res) {
-    //get logged in user
+    console.log("redirected")
     var token = req.cookies.auth;
-    jwt.verify(token, config.secret, function(err, data) {
-        _dbo.getUserProjects(data.id, function(projects) {
-            if(projects) {
-                res.render('projects', {
-                    "projects": projects}
-                    );
-                    return;
-            }
-            res.render('projet;s', {
-                "projects": []
-            });
-            return;
-        })
+    jwt.verify(token, config.secret, (err, data) => {
+        if(err) {
+            console.log("could not verify");
+        } else {
+            console.log("verified");
+            console.log(data.id);
+            _dbo.getUserProjects(data.id)
+                .then((projects) => {
+                    console.log("got projects");
+                    res.render('projects', {
+                            "projects": []}
+                        );
+                })
+                .catch((err) => {
+                    console.log("Error:");
+                    console.log(JSON.stringify(err));
+                });
+        }
     });
-    return;
 });
 
 router.get('/edit/:projectId', function (req, res) {

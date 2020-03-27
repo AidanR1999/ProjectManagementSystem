@@ -1,44 +1,60 @@
-const DbContext = require("./DbContext");
+const Datastore = require("nedb");
 var bcrypt = require('bcryptjs');
 var User = require('../models/User');
 
-let _context = new DbContext();
-
 class DatabaseAO {
+    constructor() {
+        this.Users = new Datastore("./bin/users.db");
+        this.Projects = new Datastore("./bin/projects.db");
+        this.Milestones = new Datastore("./bin/milestones.db");
+        this.Categories = new Datastore("./bin/categories.db");
+    }
+
+    init() {
+        this.Users.loadDatabase();
+        this.Projects.loadDatabase();
+        this.Milestones.loadDatabase();
+        this.Categories.loadDatabase();
+    }
+
     //user functions
     //====================================================================
     login(email, password) {
         return new Promise((resolve, reject) => {
             //get the user
-            this.getUserByEmail(email, (user) => {
-                if(user.verifyPasswordHash(password)) {
-                    resolve(user);
-                } else {
-                    reject();
-                }
-            });
+            this.getUserByEmail(email)
+                .then((user) => {
+                    if(user.verifyPasswordHash(password)) {
+                        resolve(user);
+                    } else {
+                        reject("passwords dont match");
+                    }
+                })
+                .catch((err) => {
+                    reject(err);
+                    console.log("could not insert user")
+                });
         })
     }
-    
+
     register(user, password) {
+        console.log("in register function")
         return new Promise((resolve, reject) => {
-            _context.Users.find({email: user.email}, (err, docs) => {
-                if(Object.keys(docs).length == 0) {
-                    //hash the password
-                    user.passwordHash = bcrypt.hashSync(password, 8);
-                    
-                    //insert the user
-                    _context.Users.insert(user, (err, nUser) => {
-                        if(err) {
-                            reject(err);
-                            console.log("could not insert user")
-                        }
-                        resolve(nUser);
-                    });
-                } else {
+            console.log("hash password");
+            //hash the password
+            user.passwordHash = bcrypt.hashSync(password, 8);
+
+            console.log(JSON.stringify(user));
+            
+            console.log("insert the user");
+            //insert the user
+            this.Users.insert(user, (err, nUser) => {
+                if(err) {
                     reject(err);
-                    console.log("could not load users")
+                    console.log("could not insert user")
                 }
+                console.log("registered");
+                resolve(nUser);
             });
         });
         
@@ -47,7 +63,7 @@ class DatabaseAO {
     getUserById(id) {
         return new Promise((resolve, reject) => {
             //find the user
-            _context.Users.findOne({_id: id}, (err, doc) => {
+            this.Users.findOne({_id: id}, (err, doc) => {
                 if(err) {
                     reject(err);
                     console("could not find user");
@@ -69,7 +85,7 @@ class DatabaseAO {
     getUserByEmail(email) {
         return new Promise((resolve, reject) => {
             //find the user
-            _context.Users.findOne({email: email}, (err, doc) => {
+            this.Users.findOne({email: email}, (err, doc) => {
                 if(err) {
                     reject(err);
                     console.log("user could not be found");
@@ -79,7 +95,7 @@ class DatabaseAO {
                     user.firstName = doc.firstName;
                     user.lastName = doc.lastName;
                     user.email = doc.email;
-                    user.passwordHash = doc.passwordHash;
+                    user.passwordHash = doc.passwordHash;   
 
                     resolve(user);
                 }
@@ -90,7 +106,7 @@ class DatabaseAO {
     updateUserDetails(user) {
         return new Promise((resolve, reject) => {
             //update user details in db
-            _context.Users.update({ _id: user._id }, //where to change
+            this.Users.update({ _id: user._id }, //where to change
                     { $set: { firstName: user.firstName, lastName: user.lastName } }, //what to change
                     {}, //options
                     (err, user) => { //function
@@ -111,7 +127,7 @@ class DatabaseAO {
             var passwordHash = bcrypt.hashSync(password, 8);
 
             //update in db
-            _context.Users.update({ _id: id }, //where to change
+            this.Users.update({ _id: id }, //where to change
                                 { $set: { passwordHash: passwordHash } }, //what to change
                                 {}, //options
                                 (err, user) => { //function
@@ -129,7 +145,7 @@ class DatabaseAO {
     //====================================================================
     getProject(id) {
         return new Promise((resolve, reject) => {
-            _context.Projects.findOne({_id: id}, (err, doc) => {
+            this.Projects.findOne({_id: id}, (err, doc) => {
                 if(err) {
                     reject(err);
                     console.log("could not find project");
@@ -141,24 +157,17 @@ class DatabaseAO {
     }
     getUserProjects(userId) {
         return new Promise((resolve, reject) => {
-            _context.Projects.find({ownerId: userId}, (err, projects) => {
-                if(err) {
-                    reject(err);
-                    console.log("could not find projects");
-                } else {
-                    resolve(projects);
-                }
-            });
+            
         });
     }
     createProject(project) {
-        _context.Projects.insert(project)
+        this.Projects.insert(project)
     }
     updateProject(project, callback) {
         //implement
     }
     deleteProject(id) {
-        _context.Projects.remove({_id: id}, {});
+        this.Projects.remove({_id: id}, {});
     }
     changeProjectPosition(project, callback) {
         //implement

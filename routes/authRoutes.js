@@ -6,18 +6,22 @@ var Database = require("../data/DatabaseAO");
 
 var router = express.Router();
 var _dbo = new Database();
+_dbo.init();
 
 //home page
 router.get('/', function(req, res) {
-    //check if user has token
-    var token = req.cookies.auth;
-    if(token) {
-        res.redirect('/project/')
-        return;
-    }
-    //else render home
+
     res.render('home', {})
-    return;
+
+    
+    // //check if user has token
+    // var token = req.cookies.auth;
+    // if(token) {
+    //     res.redirect('/project/')
+    // } else {
+    //     //else render home
+        
+    // }
 });
 
 //account settings
@@ -37,8 +41,10 @@ router.get('/account', function(req, res) {
 //login
 router.post('/login', function(req, res) {
 
+    console.log("started login");
     _dbo.login(req.body.email, req.body.password)
         .then((user) => {
+            console.log("logged in");
             var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
             res.redirect('/project/');
@@ -57,16 +63,20 @@ router.post('/register', function(req, res) {
     user.lastName = req.body.lastName;
     user.email = req.body.email;
 
+    console.log("makes it here");
+
     _dbo.register(user, req.body.password)
         .then((user) => {
+            console.log("makes it here");
             //send token
             var token = jwt.sign(user, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
+            console.log("redirecting...")
             res.redirect('/project/');
         })
         .catch((err) => {
             console.log("Error:");
-            console.log(JSON.stringify(err))
+            console.log(JSON.stringify(err));
         });
 });
 

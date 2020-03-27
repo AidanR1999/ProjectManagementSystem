@@ -3,7 +3,7 @@
 const express = require('express');
 const mustache = require("mustache-express");
 const path = require("path");
-const Seed = require("./data/seed");
+// const Seed = require("./data/seed");
 var cookieParser = require('cookie-parser')
 var jwt = require('jsonwebtoken');
 var config = require("./config");
@@ -31,12 +31,12 @@ app.use(cookieParser());
 
 //seed database
 //====================================================================
-let seed = new Seed();
+// let seed = new Seed();
 
-let seedAll = () => {
-  seed.initUser();
-  seed.initProjects();
-}
+// let seedAll = () => {
+//   seed.initUser();
+//   seed.initProjects();
+// }
 
 //seedAll();
 
@@ -47,30 +47,6 @@ const projectRouter = require('./routes/projectRoutes');
 
 //auth
 app.use('/', authRouter);
-
-// //token checker middleware
-// app.use(function(req, res, next) {
-//   var token = req.cookies.auth;
-
-//   //check if token exists
-//   if(token) {
-//     //verify token
-//     jwt.verify(token, config.secret, function(err, data) {
-//       if(err) {
-//         res.redirect("/");
-//         return;
-//       } else {
-//         next();
-//         return;
-//       }
-//     });
-//   } else {
-//     res.redirect("/");
-//     return;
-//   }
-//   return;
-// });
-
 //project
 app.use('/project', projectRouter);
 
@@ -78,14 +54,12 @@ app.use('/project', projectRouter);
 //404 requests
 app.use(function (req, res, next) {
   res.status(404).send("Sorry can't find that!")
-  return;
 })
 
 //error handler
 app.use(function (err, req, res, next) {
   console.error(err.stack)
   res.status(500).send('Something broke!')
-  return;
 })
 
 //start server
