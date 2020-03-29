@@ -42,11 +42,13 @@ router.get('/account', function(req, res) {
 router.post('/login', function(req, res) {
 
     console.log("started login");
+    //console.log(req.body.email, req.body.password);
     _dbo.login(req.body.email, req.body.password)
         .then((user) => {
             console.log("logged in");
             var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
+        }).then(result => {
             res.redirect('/project/');
         })
         .catch((err) => {
@@ -64,14 +66,30 @@ router.post('/register', function(req, res) {
     user.email = req.body.email;
 
     console.log("makes it here");
+    //res.clearCookie('auth');
+
+    var cookie = req.cookies.auth;
+
 
     _dbo.register(user, req.body.password)
         .then((user) => {
             console.log("makes it here");
             //send token
+
+            console.log(cookie);
+            if (cookie === undefined)
+            {
             var token = jwt.sign(user, config.secret, {expiresIn: 86400});
+            console.log("about to set response - cookie...");
             res.cookie('auth', token);
-            console.log("redirecting...")
+            console.log(' AFTER FIRST RESPONSE- this will not get called?');            
+            }
+            else
+            {
+                console.log('cookie exists', cookie);
+            }
+            
+        }).then(result => {
             res.redirect('/project/');
         })
         .catch((err) => {

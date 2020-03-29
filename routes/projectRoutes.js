@@ -9,11 +9,13 @@ _dbo.init();
 var router = express.Router();
 
 router.get('/', function (req, res) {
-    console.log("redirected")
+    console.log("redirected");
     var token = req.cookies.auth;
+    console.log(token);
     jwt.verify(token, config.secret, (err, data) => {
         if(err) {
             console.log("could not verify");
+            res.redirect('http://localhost:3000/')
         } else {
             console.log("verified");
             console.log(data.id);
@@ -61,14 +63,18 @@ router.post('/create', function(req, res) {
         //create project
         var project = new Project();
         project.title = req.body.title;
+        console.log(project.title)
         project.module = req.body.module;
         project.dueDate = new Date(req.body.dueDate);
         project.ownerId = data.id
 
+
         //add project to db
         _dbo.createProject(project, function(newProject) {
-            res.redirect('/project/');
+            console.log("project created");
+            //res.redirect('/project/');
         });
+        res.redirect('/project/');
     });
 });
 

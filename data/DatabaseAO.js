@@ -53,8 +53,12 @@ class DatabaseAO {
                     reject(err);
                     console.log("could not insert user")
                 }
-                console.log("registered");
-                resolve(nUser);
+                else
+                {
+                    console.log("registered");
+                    resolve(nUser);
+                }
+           
             });
         });
         
