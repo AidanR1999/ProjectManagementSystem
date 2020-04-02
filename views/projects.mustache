@@ -68,8 +68,24 @@
     new Sortable(el, {
     handle: '.fas.fa-bars', // handle's class
     ghostClass: "sortable-ghost",
+
+    // storing and updating position of projects
+    
+    store: {
+        get: function(sortable) {
+            var order = localStorage.getItem(sortable.options.group.name);
+			return order ? order.split('|') : [];
+        },
+
+        set: function (sortable) {
+			var order = sortable.toArray();
+            localStorage.setItem(sortable.options.group.name, order.join('|'));
+            console.log(order);
+		}  
+    }
     });
     })
+
     
 
 </script>
