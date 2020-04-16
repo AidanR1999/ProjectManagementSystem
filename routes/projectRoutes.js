@@ -1,16 +1,16 @@
 var express = require('express');
-var Database = require("../data/DatabaseAO");
+var _dbo = require("../data/DatabaseAO");
 var Project = require('../models/Project');
 var jwt = require('jsonwebtoken');
 var config = require("../config");
 
-var _dbo = new Database();
-_dbo.init();
 var router = express.Router();
 
 router.get('/', function (req, res) {
     console.log("redirected");
     var token = req.cookies.auth;
+    console.log("in project root, token", token);
+
     console.log(token);
     jwt.verify(token, config.secret, (err, data) => {
         if(err) {
@@ -18,9 +18,9 @@ router.get('/', function (req, res) {
             res.redirect('http://localhost:3000/')
         } else {
             console.log("verified");
-            console.log(data.id);
-            _dbo.getUserProjects(data.id)
+            _dbo.getUserProjects(data._id)
                 .then((projects) => {
+                    console.log(projects);
                     console.log("got projects");
                     res.render('projects', {
                             "projects": projects}
@@ -29,6 +29,7 @@ router.get('/', function (req, res) {
                 .catch((err) => {
                     console.log("Error:");
                     console.log(JSON.stringify(err));
+                    res.redirect('/views/error.html');
                 });
         }
     });

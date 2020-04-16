@@ -7,6 +7,7 @@ const path = require("path");
 var cookieParser = require('cookie-parser')
 var jwt = require('jsonwebtoken');
 var config = require("./config");
+const _dbo = require('./data/DatabaseAO');
 
 //express
 //====================================================================
@@ -39,6 +40,8 @@ app.use(cookieParser());
 // }
 
 //seedAll();
+
+_dbo.init();
 
 //routes
 //====================================================================

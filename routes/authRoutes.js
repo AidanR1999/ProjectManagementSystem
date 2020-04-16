@@ -2,11 +2,9 @@ var express = require('express');
 var jwt = require('jsonwebtoken');
 var config = require("../config");
 var User = require("../models/User");
-var Database = require("../data/DatabaseAO");
+var _dbo = require("../data/DatabaseAO");
 
 var router = express.Router();
-var _dbo = new Database();
-_dbo.init();
 
 //home page
 router.get('/', function(req, res) {
@@ -73,23 +71,20 @@ router.post('/register', function(req, res) {
 
     _dbo.register(user, req.body.password)
         .then((user) => {
-            console.log("makes it here");
+
             //send token
 
-            console.log(cookie);
             if (cookie === undefined)
             {
             var token = jwt.sign(user, config.secret, {expiresIn: 86400});
-            console.log("about to set response - cookie...");
             res.cookie('auth', token);
-            console.log(' AFTER FIRST RESPONSE- this will not get called?');            
             }
             else
             {
                 console.log('cookie exists', cookie);
             }
             
-        }).then(result => {
+        }).then((result) => {
             res.redirect('/project/');
         })
         .catch((err) => {

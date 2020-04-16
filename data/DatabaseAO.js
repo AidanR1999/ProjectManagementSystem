@@ -1,9 +1,12 @@
 const Datastore = require("nedb");
 var bcrypt = require('bcryptjs');
 var User = require('../models/User');
+const path = require('path');
+
 
 class DatabaseAO {
     constructor() {
+        console.log("Databases are loading");
         this.Users = new Datastore("./bin/users.db");
         this.Projects = new Datastore("./bin/projects.db");
         this.Milestones = new Datastore("./bin/milestones.db");
@@ -11,10 +14,48 @@ class DatabaseAO {
     }
 
     init() {
+        /*
+        //original
         this.Users.loadDatabase();
         this.Projects.loadDatabase();
         this.Milestones.loadDatabase();
         this.Categories.loadDatabase();
+
+        */
+
+       this.Users.loadDatabase(function (err) {
+        // Callback is optional
+        // Now commands will be executed
+        console.log("finished", err);
+        if (err) {
+            console.log("Users finished", err);
+        }
+        });
+        this.Projects.loadDatabase(function (err) {
+            // Callback is optional
+            // Now commands will be executed
+            console.log("finished", err);
+            if (err) {
+                console.log("Projects finished", err);
+            }
+          });
+        this.Milestones.loadDatabase(function (err) {
+            // Callback is optional
+            // Now commands will be executed
+            console.log("finished", err);
+            if (err) {
+                console.log("Milestones finished", err);
+            }
+          });
+        this.Categories.loadDatabase(function (err) {
+            // Callback is optional
+            // Now commands will be executed
+            console.log("finished", err);
+            if (err) {
+                console.log("Categories finished", err);
+            }
+          });
+
     }
 
     //user functions
@@ -94,6 +135,7 @@ class DatabaseAO {
                     reject(err);
                     console.log("user could not be found");
                 } else {
+                    console.log(doc);
                     var user = new User();
                     user._id = doc._id;
                     user.firstName = doc.firstName;
@@ -159,6 +201,36 @@ class DatabaseAO {
             });
         });
     }
+
+
+//     lookup(user, cb) {
+//         this.db.find({'user': user}, function (err, entries) {
+//             if (err) {
+//                 return cb(err, null);
+//             } else {
+//                 if (entries.length == 0) {
+//                     return cb(null, null);
+//                 }
+//                 return cb(null, entries[0]);
+//             }
+//         });
+//     }
+// }
+    
+    // getUserProjects(userId, cb) {
+    //         this.Projects.find({ownerId: userId}, function(err, docs) {
+    //             if(err) {
+    //                 return cb(err, null);    
+    //             } else {
+    //                 if (docs.lenght == 0) {
+    //                     return cb(null, null);
+    //                 }
+    //                 return cb(null, docs[0]);
+    //             }
+    //         });
+    //     }
+
+
     getUserProjects(userId) {
         return new Promise((resolve, reject) => {
             this.Projects.find({ownerId: userId}, (err, docs) => {
@@ -171,6 +243,8 @@ class DatabaseAO {
             });
         });
     }
+    
+
     createProject(project) {
         this.Projects.insert(project)
     }
@@ -228,4 +302,4 @@ class DatabaseAO {
     
 }
 
-module.exports = DatabaseAO;
+module.exports = new DatabaseAO();
