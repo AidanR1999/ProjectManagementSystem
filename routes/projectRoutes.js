@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
             res.redirect('http://localhost:3000/')
         } else {
             console.log("verified");
-            _dbo.getUserProjects(data._id)
+            _dbo.getUserProjects(data.id)
                 .then((projects) => {
                     console.log(projects);
                     console.log("got projects");
