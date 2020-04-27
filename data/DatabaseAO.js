@@ -10,19 +10,9 @@ class DatabaseAO {
         this.Users = new Datastore("./bin/users.db");
         this.Projects = new Datastore("./bin/projects.db");
         this.Milestones = new Datastore("./bin/milestones.db");
-        this.Categories = new Datastore("./bin/categories.db");
     }
 
     init() {
-        /*
-        //original
-        this.Users.loadDatabase();
-        this.Projects.loadDatabase();
-        this.Milestones.loadDatabase();
-        this.Categories.loadDatabase();
-
-        */
-
        this.Users.loadDatabase(function (err) {
         // Callback is optional
         // Now commands will be executed
@@ -47,15 +37,6 @@ class DatabaseAO {
                 console.log("Milestones finished", err);
             }
           });
-        this.Categories.loadDatabase(function (err) {
-            // Callback is optional
-            // Now commands will be executed
-            console.log("finished", err);
-            if (err) {
-                console.log("Categories finished", err);
-            }
-          });
-
     }
 
     //user functions
@@ -113,8 +94,9 @@ class DatabaseAO {
                     reject(err);
                     console("could not find user");
                 } else {
+                    console.log(doc);
                     var user = new User();
-                    user._id = doc._id;
+                    user._id = id;
                     user.firstName = doc.firstName;
                     user.lastName = doc.lastName;
                     user.email = doc.email;
@@ -135,7 +117,6 @@ class DatabaseAO {
                     reject(err);
                     console.log("user could not be found");
                 } else {
-                    console.log(doc);
                     var user = new User();
                     user._id = doc._id;
                     user.firstName = doc.firstName;
@@ -184,6 +165,20 @@ class DatabaseAO {
                                         resolve(user);
                                     }
                                 });
+        });
+    }
+
+    deleteAccount(id) {
+        return new Promise((resolve, reject) => {
+            this.Users.remove({_id: id},
+                {},
+                (err) => {
+                    if(err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+            });
         });
     }
 
@@ -278,28 +273,6 @@ class DatabaseAO {
     changeMilestonePosition(milestone) {
         //implement
     }
-
-    //category functions
-    //====================================================================
-    getCategory(id) {
-        //implement
-    }
-    getProjectCategories(projectId) {
-        //implement
-    }
-    createCategory(category) {
-        //implement
-    }
-    updateCategory(category) {
-        //implement
-    }
-    deleteCategory(id) {
-        //implement
-    }
-    changeCategoryPosition(category) {
-        //implement
-    }
-    
 }
 
 module.exports = new DatabaseAO();

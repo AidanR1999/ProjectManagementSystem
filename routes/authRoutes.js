@@ -8,18 +8,7 @@ var router = express.Router();
 
 //home page
 router.get('/', function(req, res) {
-
     res.render('home', {})
-
-    
-    // //check if user has token
-    // var token = req.cookies.auth;
-    // if(token) {
-    //     res.redirect('/project/')
-    // } else {
-    //     //else render home
-        
-    // }
 });
 
 //account settings
@@ -27,13 +16,11 @@ router.get('/account', function(req, res) {
     //get logged in user
     var token = req.cookies.auth;
     jwt.verify(token, config.secret, function(err, data) {
-        _dbo.getUserById(data.id, function(user) {
-            res.render('account', user);
-            return;
-        })
-        return;
+        _dbo.getUserById(data._id)
+            .then((user) => {
+                res.render("account", user);
+            })
     });
-    return;
 });
 
 //login
@@ -44,7 +31,7 @@ router.post('/login', function(req, res) {
     _dbo.login(req.body.email, req.body.password)
         .then((user) => {
             console.log("logged in");
-            var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
+            var token = jwt.sign({_id: user._id}, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
         }).then(result => {
             res.redirect('/project/');
@@ -68,16 +55,13 @@ router.post('/register', function(req, res) {
 
     var cookie = req.cookies.auth;
 
-
     _dbo.register(user, req.body.password)
         .then((user) => {
-
             //send token
-
             if (cookie === undefined)
             {
-            var token = jwt.sign(user, config.secret, {expiresIn: 86400});
-            res.cookie('auth', token);
+                var token = jwt.sign({_id: user._id}, config.secret, {expiresIn: 86400});
+                res.cookie('auth', token);
             }
             else
             {
@@ -105,33 +89,37 @@ router.post('/update', function(req, res) {
     }
 
     jwt.verify(token, config.secret, function(err, data) {
-        user._id = data.id;
-        _dbo.updateUserDetails(user, function(user) {
-            res.redirect('/account');
-            return;
-        })
-        return;
+        user._id = data._id;
+        _dbo.updateUserDetails(user)
+            .then((user) => {
+                res.redirect("/account");
+            });
     });
-    return;
 });
+
 //change password
 router.post('/changepassword', function(req, res) {
     //get logged in user
     var token = req.cookies.auth;
     jwt.verify(token, config.secret, function(err, data) {
-        _dbo.changePassword(data.id, req.body.password, function(user) {
-            res.redirect('/account');
-            return;
-        });
-        return;
+        _dbo.changePassword(data._id, req.body.password)
+            .then((user) => {
+                console.log("changed");
+                res.redirect("/account");
+            });
     });
-    return;
 });
 
 //delete account
 router.post('/deleteaccount', function(req, res) {
-    res.redirect('/project/');
-    return;
+    //get logged in user
+    var token = req.cookies.auth;
+    jwt.verify(token, config.secret, function(err, data) {
+        _dbo.deleteAccount(data._id)
+            .then(() => {
+                res.redirect("/");
+            });
+    });
 });
 
 //logout
@@ -139,7 +127,6 @@ router.get('/logout', function(req, res) {
     //clear token
     res.cookie('auth', "");
     res.redirect('/');
-    return;
 })
 
 module.exports = router;
