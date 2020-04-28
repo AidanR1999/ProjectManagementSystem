@@ -37,20 +37,20 @@ router.get('/', function (req, res) {
 
 router.get('/edit/:projectId', function (req, res) {
    var id = req.params.projectId;
-//    var token = req.cookies.auth;
-//     jwt.verify(token, config.secret, (err, data) => {
-//         if(err) {
-//             console.log("could not verify");
-//         } else {
+   var token = req.cookies.auth;
+    jwt.verify(token, config.secret, (err, data) => {
+        if(err) {
+            console.log("could not verify");
+        } else {
             
-//             _dbo.getProject(id)
-//             .then((project) => {
-//                 res.render('edit', {
-//                     "milestones" : []
-//                 });
-//             });
-//         };
-//     });
+            _dbo.getProject(id)
+            .then((project) => {
+                res.render('edit', {
+                    "milestones" : []
+                });
+            });
+        };
+    });
 });
 
 router.get('/create', function (req, res) {

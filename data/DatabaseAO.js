@@ -261,45 +261,64 @@ class DatabaseAO {
     //milestone functions
     //====================================================================
     getMilestone(id) {
-        //implement
+        return new Promise((resolve, reject) =>{
+            this.Milestones.findOne({_id: id}, (err, doc) =>{
+                if(err) {
+                    reject(err);
+                    
+                }
+                else{
+                    resolve(doc);
+                }
+            });
+        });
     }
     getProjectMilestones(projectId) {
-        //implement
+        return new Promise((resolve, reject) => {
+            this.Milestones.find({projectId: projectId}, (err, docs) => {
+                if(err){
+                    reject(err);
+                }
+                else{
+                    resolve(docs);
+                }
+            });
+        });
     }
     createMilestone(milestone) {
-        //implement
+        return new Promise((resolve, reject) =>{
+            this.Milestones.insert(milestone, (err, newMilestone) => {
+                if(err){
+                    reject(err);
+                }
+                else{
+                    resolve(newMilestone);
+                }
+            });
+        });
     }
+
     updateMilstone(milestone) {
-        //implement
+        return new Promise((resolve, reject) =>{
+            this.Milestones.update({_id: milestone._id},
+                { $set: {name: milestone.name, completionDate: milestone.completionDate } },
+                {},
+                (err, milestone)=>{
+                    if(err){
+                        reject(err);
+                    }
+                    else{
+                        resolve(milestone);
+                    }
+                });
+        });
     }
     deleteMilstone(id) {
-        //implement
+        this.Milestones.remove({_id: id},{});
     }
     changeMilestonePosition(milestone) {
         //implement
     }
-
-    //category functions
-    //====================================================================
-    getCategory(id) {
-        //implement
-    }
-    getProjectCategories(projectId) {
-        //implement
-    }
-    createCategory(category) {
-        //implement
-    }
-    updateCategory(category) {
-        //implement
-    }
-    deleteCategory(id) {
-        //implement
-    }
-    changeCategoryPosition(category) {
-        //implement
-    }
-    
 }
 
 module.exports = new DatabaseAO();
