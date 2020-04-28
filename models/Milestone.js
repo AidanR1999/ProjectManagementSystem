@@ -4,7 +4,6 @@ class Milestone {
         this.completionDate = new Date();
         this.position = 0;
         this.projectId = "";
-        this.categoryId = "";
     }
 
     //custom functions
@@ -14,4 +13,4 @@ class Milestone {
         return true;
     }
 }
-module.exports = Milstone;
+module.exports = Milestone;

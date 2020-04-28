@@ -10,18 +10,9 @@ class DatabaseAO {
         this.Users = new Datastore("./bin/users.db");
         this.Projects = new Datastore("./bin/projects.db");
         this.Milestones = new Datastore("./bin/milestones.db");
-        this.Categories = new Datastore("./bin/categories.db");
     }
 
     init() {
-        /*
-        //original
-        this.Users.loadDatabase();
-        this.Projects.loadDatabase();
-        this.Milestones.loadDatabase();
-        this.Categories.loadDatabase();
-
-        */
 
        this.Users.loadDatabase(function (err) {
         // Callback is optional
@@ -45,14 +36,6 @@ class DatabaseAO {
             console.log("finished", err);
             if (err) {
                 console.log("Milestones finished", err);
-            }
-          });
-        this.Categories.loadDatabase(function (err) {
-            // Callback is optional
-            // Now commands will be executed
-            console.log("finished", err);
-            if (err) {
-                console.log("Categories finished", err);
             }
           });
 
@@ -273,6 +256,20 @@ class DatabaseAO {
             });
         });
     }
+    getProjectAndMilestones(projectId){
+        return new Promise((resolve, reject) => {
+            this.Projects.findOne({_id: projectId}, (err, doc) => {
+                if(err) {
+                    reject(err);
+                    console.log("could not find project");
+                } else {
+                    resolve(doc);
+                }
+            });
+            
+        });
+    }
+
     getProjectMilestones(projectId) {
         return new Promise((resolve, reject) => {
             this.Milestones.find({projectId: projectId}, (err, docs) => {
@@ -298,7 +295,7 @@ class DatabaseAO {
         });
     }
 
-    updateMilstone(milestone) {
+    updateMilestone(milestone) {
         return new Promise((resolve, reject) =>{
             this.Milestones.update({_id: milestone._id},
                 { $set: {name: milestone.name, completionDate: milestone.completionDate } },
@@ -313,7 +310,7 @@ class DatabaseAO {
                 });
         });
     }
-    deleteMilstone(id) {
+    deleteMilestone(id) {
         this.Milestones.remove({_id: id},{});
     }
     changeMilestonePosition(milestone) {
