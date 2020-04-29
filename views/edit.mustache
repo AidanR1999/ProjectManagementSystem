@@ -5,12 +5,37 @@
 
 <div class="container">
   {{#milestones}}
-        <div class="row">
-                <div class="col-sm">
-                  <label>Milestone name:</label>
-                  <p>{{name}}</p>
+  
+        <li>
+            <div class="container">
+                <div class="row">
+                    <div class="container well span6">
+                        <div class="col-sm"></div>
+                        <div class="row-fluid">
+                            <div class="span1">
+                                <i class="fas fa-bars"></i>
+                            </div>
+                             <div class="row">
+                                <div class="col-sm">
+                                  <label><b>Milestone name:</b></label>
+                                  <p>{{name}}</p>
+                                </div>
+                              </div>
+                            <div class="span2">
+                                <form action="/project/edit/{{projectId}}/deleteMilestone/{{_id}}" method="post" >
+                                    <input type="hidden" id="id" name="id" value="{{_id}}">
+                                    <button type="submit" class="btn btn-danger">
+                                        <span class="icon-trash"></span> Delete</a>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-sm"></div>
+                    </div>
                 </div>
-        </div>
+            </div>
+        </li>
+       
   {{/milestones}}
 </div>
 

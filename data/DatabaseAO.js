@@ -310,9 +310,11 @@ class DatabaseAO {
                 });
         });
     }
+    
     deleteMilestone(id) {
         this.Milestones.remove({_id: id},{});
     }
+
     changeMilestonePosition(milestone) {
         //implement
     }

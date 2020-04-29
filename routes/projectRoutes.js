@@ -70,11 +70,22 @@ router.post('/edit/:projectId/', function(req, res){
                 console.log("added new milestone");
                 res.redirect(id);
             })
-        
-        //res.redirect('/project/');
     });
     
 });
+router.post('/edit/:projectId/deleteMilestone/:milestoneId', function(req, res){
+    var id = req.params.projectId;
+    var milId = req.params.milestoneId;
+    var token = req.cookies.auth;
+    jwt.verify(token, config.secret, function (err, data){
+        _dbo.deleteMilestone(milId);
+        
+            res.redirect('/project/edit/'+id);
+        
+        
+    });
+    
+})
 
 router.get('/create', function (req, res) {
    res.render('create', {});
