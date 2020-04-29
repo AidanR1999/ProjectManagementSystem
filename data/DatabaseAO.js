@@ -248,7 +248,6 @@ class DatabaseAO {
             this.Milestones.findOne({_id: id}, (err, doc) =>{
                 if(err) {
                     reject(err);
-                    
                 }
                 else{
                     resolve(doc);
@@ -298,7 +297,7 @@ class DatabaseAO {
     updateMilestone(milestone) {
         return new Promise((resolve, reject) =>{
             this.Milestones.update({_id: milestone._id},
-                { $set: {name: milestone.name, completionDate: milestone.completionDate } },
+                { $set: {name: milestone.name, completionDate: milestone.completionDate, isComplete : milestone.isComplete } },
                 {},
                 (err, milestone)=>{
                     if(err){
@@ -310,7 +309,7 @@ class DatabaseAO {
                 });
         });
     }
-    
+
     deleteMilestone(id) {
         this.Milestones.remove({_id: id},{});
     }

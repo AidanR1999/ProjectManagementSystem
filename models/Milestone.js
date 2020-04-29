@@ -1,16 +1,11 @@
 class Milestone {
     constructor() {
         this.name = "";
-        this.completionDate = new Date();
+        this.completionDate = null;
         this.position = 0;
+        this.isComplete= false;
         this.projectId = "";
-    }
-
-    //custom functions
-    isComplete() {
-        if(this.completionDate == new Date())
-            return false;
-        return true;
-    }
+    }    
+    
 }
 module.exports = Milestone;
