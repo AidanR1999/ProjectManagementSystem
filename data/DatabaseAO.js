@@ -95,7 +95,8 @@ class DatabaseAO {
                 if(err) {
                     reject(err);
                     console("could not find user");
-                } else {
+                }
+                 else {
                     var user = new User();
                     user._id = doc._id;
                     user.firstName = doc.firstName;
@@ -117,8 +118,12 @@ class DatabaseAO {
                 if(err) {
                     reject(err);
                     console.log("user could not be found");
-                } else {
-                    console.log(doc);
+                } 
+                if(doc == null) {
+                    console.log("This should return that user not found");
+                }
+                else {
+                    console.log("The doc in getUserEmial in else block is "+ doc);
                     var user = new User();
                     user._id = doc._id;
                     user.firstName = doc.firstName;
