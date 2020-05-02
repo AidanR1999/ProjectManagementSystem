@@ -51,7 +51,7 @@ router.post('/register', function(req, res) {
     user.email = req.body.email;
 
     console.log("makes it here");
-    //res.clearCookie('auth');
+    
 
     var cookie = req.cookies.auth;
 
@@ -125,7 +125,7 @@ router.post('/deleteaccount', function(req, res) {
 //logout
 router.get('/logout', function(req, res) {
     //clear token
-    res.cookie('auth', "");
+    res.clearCookie('auth');
     res.redirect('/');
 })
 
