@@ -14,6 +14,7 @@ class DatabaseAO {
 
     init() {
 
+
        this.Users.loadDatabase(function (err) {
         // Callback is optional
         // Now commands will be executed
@@ -38,6 +39,7 @@ class DatabaseAO {
                 console.log("Milestones finished", err);
             }
           });
+
 
     }
 
@@ -97,8 +99,9 @@ class DatabaseAO {
                     console("could not find user");
                 }
                  else {
+
                     var user = new User();
-                    user._id = doc._id;
+                    user._id = id;
                     user.firstName = doc.firstName;
                     user.lastName = doc.lastName;
                     user.email = doc.email;
@@ -124,6 +127,7 @@ class DatabaseAO {
                 }
                 else {
                     console.log("The doc in getUserEmial in else block is "+ doc);
+
                     var user = new User();
                     user._id = doc._id;
                     user.firstName = doc.firstName;
@@ -172,6 +176,20 @@ class DatabaseAO {
                                         resolve(user);
                                     }
                                 });
+        });
+    }
+
+    deleteAccount(id) {
+        return new Promise((resolve, reject) => {
+            this.Users.remove({_id: id},
+                {},
+                (err) => {
+                    if(err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+            });
         });
     }
 
@@ -322,6 +340,7 @@ class DatabaseAO {
     changeMilestonePosition(milestone) {
         //implement
     }
+
 }
 
 module.exports = new DatabaseAO();
