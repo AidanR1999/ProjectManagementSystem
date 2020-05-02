@@ -3,12 +3,12 @@ const bcrypt = require('bcryptjs');
 let _context = new DbContext();
 
 //create user
-lukasz = {
-  firstName: "Lukasz",
-  lastName: "Bonkowski",
-  email: "test1@test.com",
-  password: bcrypt.hashSync("icecream2", 8)
-};
+  lukasz = {
+    firstName: "Lukasz",
+    lastName: "Bonkowski",
+    email: "test1@test.com",
+    password: bcrypt.hashSync("icecream2", 8)
+  };
 
 
 class Seed {

@@ -70,6 +70,7 @@
     handle: '.fas.fa-bars', // handle's class
     group: "items",
     ghostClass: "sortable-ghost",
+
     // storing and updating order and saving to local storage
     store: {
         get: function(sortable) {
@@ -79,11 +80,14 @@
 
         set: function (sortable) {
 			var order = sortable.toArray();
-			localStorage.setItem(sortable.options.group.name, order.join('|'));
-		}
+            localStorage.setItem(sortable.options.group.name, order.join('|'));
+            console.log(order);
+		}  
+
     }
     });
     })
+
     
 
 </script>

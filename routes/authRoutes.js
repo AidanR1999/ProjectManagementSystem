@@ -2,37 +2,44 @@ var express = require('express');
 var jwt = require('jsonwebtoken');
 var config = require("../config");
 var User = require("../models/User");
-var Database = require("../data/DatabaseAO");
+var _dbo = require("../data/DatabaseAO");
 
 var router = express.Router();
-var _dbo = new Database();
 
 //home page
-router.get('/', function (req, res) {
-    //check if user has token
-    var token = req.cookies.auth;
-    if(token) {
-        res.redirect('/project/')
-        return;
-    }
-    //else render home
+router.get('/', function(req, res) {
     res.render('home', {})
+});
+
+//account settings
+router.get('/account', function(req, res) {
+    //get logged in user
+    var token = req.cookies.auth;
+    jwt.verify(token, config.secret, function(err, data) {
+        _dbo.getUserById(data._id)
+            .then((user) => {
+                res.render("account", user);
+            })
+    });
 });
 
 //login
 router.post('/login', function(req, res) {
-    //attempt login
-    _dbo.login(req.body.email, req.body.password, function(user) {
-        //if successful send token
-        if(user) {
-            var token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400});
+
+    console.log("started login");
+    //console.log(req.body.email, req.body.password);
+    _dbo.login(req.body.email, req.body.password)
+        .then((user) => {
+            console.log("logged in");
+            var token = jwt.sign({_id: user._id}, config.secret, {expiresIn: 86400});
             res.cookie('auth', token);
+        }).then(result => {
             res.redirect('/project/');
-            return;
-        }
-        //else redirect back
-        res.redirect('/');
-    });
+        })
+        .catch((err) => {
+            console.log("Error:");
+            console.log(JSON.stringify(err))
+        });
 });
 
 //register
@@ -43,12 +50,75 @@ router.post('/register', function(req, res) {
     user.lastName = req.body.lastName;
     user.email = req.body.email;
 
-    //register user
-    _dbo.register(user, req.body.password, function(user) {
-        //send token
-        var token = jwt.sign(user, config.secret, {expiresIn: 86400});
-        res.cookie('auth', token);
-        res.redirect('/project/');
+    console.log("makes it here");
+    //res.clearCookie('auth');
+
+    var cookie = req.cookies.auth;
+
+    _dbo.register(user, req.body.password)
+        .then((user) => {
+            //send token
+            if (cookie === undefined)
+            {
+                var token = jwt.sign({_id: user._id}, config.secret, {expiresIn: 86400});
+                res.cookie('auth', token);
+            }
+            else
+            {
+                console.log('cookie exists', cookie);
+            }
+            
+        }).then((result) => {
+            res.redirect('/project/');
+        })
+        .catch((err) => {
+            console.log("Error:");
+            console.log(JSON.stringify(err));
+        });
+});
+
+//update account details
+router.post('/update', function(req, res) {
+    //get logged in user
+    var token = req.cookies.auth;
+
+    //create object
+    var user = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
+    }
+
+    jwt.verify(token, config.secret, function(err, data) {
+        user._id = data._id;
+        _dbo.updateUserDetails(user)
+            .then((user) => {
+                res.redirect("/account");
+            });
+    });
+});
+
+//change password
+router.post('/changepassword', function(req, res) {
+    //get logged in user
+    var token = req.cookies.auth;
+    jwt.verify(token, config.secret, function(err, data) {
+        _dbo.changePassword(data._id, req.body.password)
+            .then((user) => {
+                console.log("changed");
+                res.redirect("/account");
+            });
+    });
+});
+
+//delete account
+router.post('/deleteaccount', function(req, res) {
+    //get logged in user
+    var token = req.cookies.auth;
+    jwt.verify(token, config.secret, function(err, data) {
+        _dbo.deleteAccount(data._id)
+            .then(() => {
+                res.redirect("/");
+            });
     });
 });
 
