@@ -37,8 +37,8 @@ router.post('/login', function(req, res) {
             res.redirect('/project/');
         })
         .catch((err) => {
-            console.log("Error:");
-            console.log(JSON.stringify(err))
+            console.log(err);
+            res.send(err);
         });
 });
 

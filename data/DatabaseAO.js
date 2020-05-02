@@ -58,7 +58,7 @@ class DatabaseAO {
                 })
                 .catch((err) => {
                     reject(err);
-                    console.log("could not insert user")
+                    console.log("could not login")
                 });
         })
     }
@@ -120,9 +120,10 @@ class DatabaseAO {
             this.Users.findOne({email: email}, (err, doc) => {
                 if(err) {
                     reject(err);
-                    console.log("user could not be found");
+                    console.log("nedb error");
                 } 
                 if(doc == null) {
+                    reject( new Error('no user found'));
                     console.log("This should return that user not found");
                 }
                 else {

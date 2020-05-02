@@ -9,6 +9,12 @@ var jwt = require('jsonwebtoken');
 var config = require("./config");
 const _dbo = require('./data/DatabaseAO');
 
+// user feedback
+const flash = require('connect-flash');
+
+//sessions
+
+const session = require('express-session');
 //express
 //====================================================================
 const app = express();
@@ -48,6 +54,18 @@ _dbo.init();
 const authRouter = require('./routes/authRoutes');
 const projectRouter = require('./routes/projectRoutes');
 
+
+//sessions
+app.use(session({
+  secret: 'super-secret',
+  resave: false,
+  saveUninitialized: false
+
+}));
+
+
+//flash
+app.use(flash());
 //auth
 app.use('/', authRouter);
 //project
@@ -64,6 +82,11 @@ app.use(function (err, req, res, next) {
   console.error(err.stack)
   res.status(500).send('Something broke!')
 })
+
+
+
+
+
 
 //start server
 //====================================================================
