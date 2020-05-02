@@ -13,6 +13,8 @@ class DatabaseAO {
     }
 
     init() {
+
+
        this.Users.loadDatabase(function (err) {
         // Callback is optional
         // Now commands will be executed
@@ -37,6 +39,8 @@ class DatabaseAO {
                 console.log("Milestones finished", err);
             }
           });
+
+
     }
 
     //user functions
@@ -93,8 +97,9 @@ class DatabaseAO {
                 if(err) {
                     reject(err);
                     console("could not find user");
-                } else {
-                    console.log(doc);
+                }
+                 else {
+
                     var user = new User();
                     user._id = id;
                     user.firstName = doc.firstName;
@@ -116,7 +121,13 @@ class DatabaseAO {
                 if(err) {
                     reject(err);
                     console.log("user could not be found");
-                } else {
+                } 
+                if(doc == null) {
+                    console.log("This should return that user not found");
+                }
+                else {
+                    console.log("The doc in getUserEmial in else block is "+ doc);
+
                     var user = new User();
                     user._id = doc._id;
                     user.firstName = doc.firstName;
@@ -256,23 +267,80 @@ class DatabaseAO {
     //milestone functions
     //====================================================================
     getMilestone(id) {
-        //implement
+        return new Promise((resolve, reject) =>{
+            this.Milestones.findOne({_id: id}, (err, doc) =>{
+                if(err) {
+                    reject(err);
+                }
+                else{
+                    resolve(doc);
+                }
+            });
+        });
     }
+    getProjectAndMilestones(projectId){
+        return new Promise((resolve, reject) => {
+            this.Projects.findOne({_id: projectId}, (err, doc) => {
+                if(err) {
+                    reject(err);
+                    console.log("could not find project");
+                } else {
+                    resolve(doc);
+                }
+            });
+            
+        });
+    }
+
     getProjectMilestones(projectId) {
-        //implement
+        return new Promise((resolve, reject) => {
+            this.Milestones.find({projectId: projectId}, (err, docs) => {
+                if(err){
+                    reject(err);
+                }
+                else{
+                    resolve(docs);
+                }
+            });
+        });
     }
     createMilestone(milestone) {
-        //implement
+        return new Promise((resolve, reject) =>{
+            this.Milestones.insert(milestone, (err, newMilestone) => {
+                if(err){
+                    reject(err);
+                }
+                else{
+                    resolve(newMilestone);
+                }
+            });
+        });
     }
-    updateMilstone(milestone) {
-        //implement
+
+    updateMilestone(milestone) {
+        return new Promise((resolve, reject) =>{
+            this.Milestones.update({_id: milestone._id},
+                { $set: {name: milestone.name, completionDate: milestone.completionDate, isComplete : milestone.isComplete } },
+                {},
+                (err, milestone)=>{
+                    if(err){
+                        reject(err);
+                    }
+                    else{
+                        resolve(milestone);
+                    }
+                });
+        });
     }
-    deleteMilstone(id) {
-        //implement
+
+    deleteMilestone(id) {
+        this.Milestones.remove({_id: id},{});
     }
+
     changeMilestonePosition(milestone) {
         //implement
     }
+
 }
 
 module.exports = new DatabaseAO();

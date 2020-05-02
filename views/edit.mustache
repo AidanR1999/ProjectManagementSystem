@@ -1,23 +1,71 @@
 {{>header}}
 
+<a href="/project/">Back</a>
 <div class="container">
-    <div class="row">
-        {{#categories}}
-            <div class="col-sm">
-                <p>{{name}}</p>
-            </div>
-        {{/categories}}
-    </div>
-    {{#rows}}
+{{#project}}
+  <form action="/project/edit/{{_id}}" method="post">
         <div class="row">
-            {{#milestones}}
-                <div class="col-sm">
-                    <p>{{mileName}}</p>
-                </div>
-            {{/milestones}}
+          <div class="card w-75">
+            <div class="card-body">
+              <div class="col">
+                <div class="form-group">
+                      <label>Milestone Name:</label>
+                      <input type="text" class="form-control" placeholder="Milestone Name" id="name" name="name">
+                  </div>
+              </div>
+              <div class="col">
+                <button type="submit" class="btn btn-primary">Add Milestone</button>
+              </div>
+            </div>
+          </div>
         </div>
-    {{/rows}}
+    </form>
+  {{/project}}
 </div>
+
+<div class="container">
+  {{#milestones}}
+            <div class="container">
+              <div class="row">
+                <div class="card w-75">
+                  <div class="card-body">
+                  <div class="col">
+                    <label><b>Milestone name:</b></label>
+                    <p>{{name}}</p>
+                  </div>
+                  <div class="col">
+                    <label><b>Is complete:</b></label>
+                    <p>{{isComplete}}</p>
+                  </div>
+                  <div class="col">
+                    <label><b>Completion date:</b></label>
+                    <p>{{completionDate}}</p>
+                  </div>
+                  <div class="col">
+                    <form action="/project/edit/{{projectId}}/deleteMilestone/{{_id}}" method="post" >
+                      <input type="hidden" id="id" name="id" value="{{_id}}">
+                      <button type="submit" class="btn btn-danger">
+                          <span class="icon-trash"></span> Delete</a>
+                      </button>
+                    </form>
+
+                    
+                  </div>
+                  <div class="col">
+                    <form action="/project/edit/{{projectId}}/editMilestone/{{_id}}" method="post" >
+                      <input type="hidden" id="id" name="id" value="{{_id}}">
+                      <button type="submit" class="btn btn-success">
+                          Marks as complete
+                      </button>
+                    </form>
+                  </div>
+                 </div>
+                </div> 
+              </div>
+            </div>
+  {{/milestones}}
+</div>
+
 
 
 
