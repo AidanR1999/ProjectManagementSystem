@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
             res.redirect('http://localhost:3000/')
         } else {
             console.log("verified");
-            _dbo.getUserProjects(data.id)
+            _dbo.getUserProjects(data._id)
                 .then((projects) => {
                     console.log(projects);
                     console.log("got projects");
@@ -109,19 +109,28 @@ router.post('/create', function(req, res) {
     var token = req.cookies.auth;
     jwt.verify(token, config.secret, function(err, data) {
         //create project
+        console.log(data);
+        console.log("Creating a project...");
         var project = new Project();
         project.title = req.body.title;
-        console.log(project.title)
+        console.log("Project Title is " + project.title);
         project.module = req.body.module;
+        console.log("Project Module is " + project.title);
+
         project.dueDate = new Date(req.body.dueDate);
-        project.ownerId = data.id
+        console.log("Project Due Date is " + project.dueDate);
+        project.ownerId = data._id;
+        console.log("Project owner ID is: " + project.ownerId);
         //add project to db
         _dbo.createProject(project, function(newProject) {
             console.log("project created");
+
             //res.redirect('/project/');
         });
-        res.redirect('/project/');
+
     });
+    res.redirect('/project/');
+
 });
 
 router.post('/delete', function(req, res) {
