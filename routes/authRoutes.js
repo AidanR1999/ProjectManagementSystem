@@ -8,7 +8,9 @@ var router = express.Router();
 
 //home page
 router.get('/', function(req, res) {
-    res.render('home', {})
+    res.render('home', {
+        errorMessage: req.flash('error')
+    })
 });
 
 //account settings
@@ -27,18 +29,19 @@ router.get('/account', function(req, res) {
 router.post('/login', function(req, res) {
 
     console.log("started login");
-    //console.log(req.body.email, req.body.password);
     _dbo.login(req.body.email, req.body.password)
         .then((user) => {
-            console.log("logged in");
-            var token = jwt.sign({_id: user._id}, config.secret, {expiresIn: 86400});
-            res.cookie('auth', token);
+
+        console.log("logged in");
+        var token = jwt.sign({_id: user._id}, config.secret, {expiresIn: 86400});
+        res.cookie('auth', token);            
         }).then(result => {
             res.redirect('/project/');
         })
         .catch((err) => {
-            console.log("Error:");
-            console.log(JSON.stringify(err))
+            console.log(err);
+            req.flash('error', 'Wrong username or password');
+            res.redirect('/');
         });
 });
 

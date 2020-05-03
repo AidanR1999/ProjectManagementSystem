@@ -53,12 +53,12 @@ class DatabaseAO {
                     if(user.verifyPasswordHash(password)) {
                         resolve(user);
                     } else {
-                        reject("passwords dont match");
+                        reject(new Error());
                     }
                 })
                 .catch((err) => {
-                    reject(err);
-                    console.log("could not insert user")
+                    reject(new Error(err));
+                    console.log("could not login")
                 });
         })
     }
@@ -120,9 +120,11 @@ class DatabaseAO {
             this.Users.findOne({email: email}, (err, doc) => {
                 if(err) {
                     reject(err);
-                    console.log("user could not be found");
+                    console.log("nedb error");
                 } 
+                // TODO
                 if(doc == null) {
+                    reject( new Error('no user found'));
                     console.log("This should return that user not found");
                 }
                 else {
