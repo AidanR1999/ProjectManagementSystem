@@ -53,11 +53,11 @@ class DatabaseAO {
                     if(user.verifyPasswordHash(password)) {
                         resolve(user);
                     } else {
-                        reject("passwords dont match");
+                        reject(new Error());
                     }
                 })
                 .catch((err) => {
-                    reject(err);
+                    reject(new Error(err));
                     console.log("could not login")
                 });
         })
@@ -122,6 +122,7 @@ class DatabaseAO {
                     reject(err);
                     console.log("nedb error");
                 } 
+                // TODO
                 if(doc == null) {
                     reject( new Error('no user found'));
                     console.log("This should return that user not found");
