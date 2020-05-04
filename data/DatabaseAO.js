@@ -6,7 +6,6 @@ const path = require('path');
 
 class DatabaseAO {
     constructor() {
-        console.log("Databases are loading");
         this.Users = new Datastore("./bin/users.db");
         this.Projects = new Datastore("./bin/projects.db");
         this.Milestones = new Datastore("./bin/milestones.db");
@@ -18,7 +17,6 @@ class DatabaseAO {
         this.Users.loadDatabase(function (err) {
         // Callback is optional
         // Now commands will be executed
-        console.log("finished", err);
         if (err) {
             console.log("Users finished", err);
         }
@@ -26,7 +24,6 @@ class DatabaseAO {
         this.Projects.loadDatabase(function (err) {
             // Callback is optional
             // Now commands will be executed
-            console.log("finished", err);
             if (err) {
                 console.log("Projects finished", err);
             }
@@ -34,7 +31,6 @@ class DatabaseAO {
         this.Milestones.loadDatabase(function (err) {
             // Callback is optional
             // Now commands will be executed
-            console.log("finished", err);
             if (err) {
                 console.log("Milestones finished", err);
             }
@@ -64,24 +60,17 @@ class DatabaseAO {
     }
 
     register(user, password) {
-        console.log("in register function")
         return new Promise((resolve, reject) => {
-            console.log("hash password");
             //hash the password
             user.passwordHash = bcrypt.hashSync(password, 8);
 
-            console.log(JSON.stringify(user));
-            
-            console.log("insert the user");
             //insert the user
             this.Users.insert(user, (err, nUser) => {
                 if(err) {
                     reject(err);
-                    console.log("could not insert user")
                 }
                 else
                 {
-                    console.log("registered");
                     resolve(nUser);
                 }
             });
@@ -125,8 +114,6 @@ class DatabaseAO {
                     console.log("This should return that user not found");
                 }
                 else {
-                    console.log("The doc in getUserEmial in else block is "+ doc);
-
                     var user = new User();
                     user._id = doc._id;
                     user.firstName = doc.firstName;
