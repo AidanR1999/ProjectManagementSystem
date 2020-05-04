@@ -48,36 +48,48 @@ router.post('/login', function(req, res) {
 //register
 router.post('/register', function(req, res) {
     //create user object
-    var user = new User();
-    user.firstName = req.body.firstName;
-    user.lastName = req.body.lastName;
-    user.email = req.body.email;
+    var newUser = new User();
+    newUser.firstName = req.body.firstName;
+    newUser.lastName = req.body.lastName;
+    newUser.email = req.body.email;
 
     console.log("makes it here");
-    
-
     var cookie = req.cookies.auth;
 
-    _dbo.register(user, req.body.password)
-        .then((user) => {
-            //send token
-            if (cookie === undefined)
-            {
-                var token = jwt.sign({_id: user._id}, config.secret, {expiresIn: 86400});
-                res.cookie('auth', token);
-            }
-            else
-            {
-                console.log('cookie exists', cookie);
-            }
-            
-        }).then((result) => {
-            res.redirect('/project/');
-        })
-        .catch((err) => {
-            console.log("Error:");
-            console.log(JSON.stringify(err));
-        });
+    _dbo.getUserByEmail(newUser.email)
+    .then((user) => {
+        if(user)
+        {
+            req.flash('error', 'This email is already taken');
+            res.redirect('/');
+        }
+    })
+    .catch(() =>{
+        _dbo.register(newUser, req.body.password)
+            .then((newUser) => {
+                //send token
+                if (cookie === undefined)
+                {
+                    var token = jwt.sign({_id: newUser._id}, config.secret, {expiresIn: 86400});
+                    res.cookie('auth', token);
+                }
+                else
+                {
+                    console.log('cookie exists', cookie);
+                }
+                
+            }).then((result) => {
+                res.redirect('/project/');
+            })
+            .catch((err) => {
+                console.log("Error:");
+                console.log(JSON.stringify(err));
+            });
+    })
+
+    
+
+    
 });
 
 //update account details
