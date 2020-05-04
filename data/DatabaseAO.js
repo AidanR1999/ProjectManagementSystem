@@ -197,35 +197,6 @@ class DatabaseAO {
         });
     }
 
-
-//     lookup(user, cb) {
-//         this.db.find({'user': user}, function (err, entries) {
-//             if (err) {
-//                 return cb(err, null);
-//             } else {
-//                 if (entries.length == 0) {
-//                     return cb(null, null);
-//                 }
-//                 return cb(null, entries[0]);
-//             }
-//         });
-//     }
-// }
-    
-    // getUserProjects(userId, cb) {
-    //         this.Projects.find({ownerId: userId}, function(err, docs) {
-    //             if(err) {
-    //                 return cb(err, null);    
-    //             } else {
-    //                 if (docs.lenght == 0) {
-    //                     return cb(null, null);
-    //                 }
-    //                 return cb(null, docs[0]);
-    //             }
-    //         });
-    //     }
-
-
     getUserProjects(userId) {
         return new Promise((resolve, reject) => {
             this.Projects.find({ownerId: userId}, (err, docs) => {
