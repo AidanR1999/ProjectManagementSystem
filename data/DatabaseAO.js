@@ -209,9 +209,9 @@ class DatabaseAO {
         });
     }
 
-    getUserProjects(userId) {
+    getUserProjectsComplete(userId) {
         return new Promise((resolve, reject) => {
-            this.Projects.find({ownerId: userId}, (err, docs) => {
+            this.Projects.find( {ownerId: userId, isComplete : true}, (err, docs) => {
                 if(err) {
                     reject(err);
                     console.log("could not find project");
@@ -221,6 +221,20 @@ class DatabaseAO {
             });
         });
     }
+
+    getUserProjectsInComplete(userId) {
+        return new Promise((resolve, reject) => {
+            this.Projects.find( {ownerId: userId, isComplete : false}, (err, docs) => {
+                if(err) {
+                    reject(err);
+                    console.log("could not find project");
+                } else {
+                    resolve(docs);
+                }
+            });
+        });
+    }
+    
     
 
     createProject(project) {
