@@ -2,16 +2,12 @@ class Project {
     constructor() {
         this.title = "";
         this.module = "";
-        this.dueDate = new Date();
+        this.dueDate = "";
         this.position = 0;
-        this.completionDate = new Date();
+        this.isComplete = false;
+        this.completionDate = "";
         this.ownerId = "";
     }
-    //custom functions
-    isComplete() {
-        if(this.completionDate == new Date())
-            return false;
-        return true;
-    }
+    
 }
 module.exports = Project;

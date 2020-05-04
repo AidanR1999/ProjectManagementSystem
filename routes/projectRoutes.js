@@ -58,21 +58,83 @@ router.get('/edit/:projectId/', function (req, res) {
     });
 });
 
+router.post('/complete/:projectId/', function(req, res){
+    let id = req.params.projectId;
+    let token = req.cookies.auth;
+    jwt.verify(token, config.secret, function (err, data){
+        _dbo.getProject(id)
+            .then((project) =>
+            {
+                project.isComplete = true;
+                var today = new Date();
+                var dd = today.getDate();
+
+                var mm = today.getMonth()+1; 
+                var yyyy = today.getFullYear();
+                
+                if(dd<10) 
+                {
+                    dd='0'+dd;
+                } 
+
+                if(mm<10) 
+                {
+                    mm='0'+mm;
+                } 
+                today = yyyy+'-'+mm+'-'+dd;
+                project.completionDate = today;
+                _dbo.updateProject(project);
+                res.redirect('/project/');
+            });
+
+    });
+
+});
+
 router.post('/edit/:projectId/', function(req, res){
     let id = req.params.projectId;
     let token = req.cookies.auth;
     jwt.verify(token, config.secret, function (err, data){
-        let milestone = new Milestone();
-        milestone.name = req.body.name;
-        milestone.projectId = id;
-        _dbo.createMilestone(milestone)
-            .then((milestone) =>{
-                console.log("added new milestone");
+        
+        if(req.body.title != "" && req.body.module != "")
+        {
+            _dbo.getProject(id)
+            .then((project) =>
+            {
+                project.title = req.body.title;
+                project.module = req.body.module;
+                project.dueDate = req.body.dueDate;
+                _dbo.updateProject(project);
                 res.redirect(id);
-            })
+            });
+            
+        }
+        
+        
     });
     
 });
+
+router.post('/edit/:projectId/addmilestone', function(req, res){
+    let id = req.params.projectId;
+    let token = req.cookies.auth;
+    jwt.verify(token, config.secret, function (err, data){
+        if(req.body.name != "")
+        {
+            let milestone = new Milestone();
+            milestone.name = req.body.name;
+            milestone.projectId = id;
+            _dbo.createMilestone(milestone)
+            .then((milestone) =>{
+                console.log("added new milestone");
+                res.redirect('/project/edit/'+id);
+            })
+        }
+        
+    });
+    
+});
+
 router.post('/edit/:projectId/deleteMilestone/:milestoneId', function(req, res){
     let id = req.params.projectId;
     let milId = req.params.milestoneId;
@@ -92,7 +154,23 @@ router.post('/edit/:projectId/editMilestone/:milestoneId', function(req, res){
         _dbo.getMilestone(milId)
         .then((milestone) => {
             milestone.isComplete = true;
-            milestone.completionDate = new Date();
+            var today = new Date();
+            var dd = today.getDate();
+
+            var mm = today.getMonth()+1; 
+            var yyyy = today.getFullYear();
+            
+            if(dd<10) 
+            {
+                dd='0'+dd;
+            } 
+
+            if(mm<10) 
+            {
+                mm='0'+mm;
+            } 
+            today = yyyy+'-'+mm+'-'+dd;
+            milestone.completionDate = today;
             _dbo.updateMilestone(milestone)
             res.redirect('/project/edit/'+id);
         });
@@ -116,8 +194,7 @@ router.post('/create', function(req, res) {
         console.log("Project Title is " + project.title);
         project.module = req.body.module;
         console.log("Project Module is " + project.title);
-
-        project.dueDate = new Date(req.body.dueDate);
+        project.dueDate = req.body.dueDate;
         console.log("Project Due Date is " + project.dueDate);
         project.ownerId = data._id;
         console.log("Project owner ID is: " + project.ownerId);
@@ -133,10 +210,15 @@ router.post('/create', function(req, res) {
 
 });
 
-router.post('/delete', function(req, res) {
-    _dbo.deleteProject(req.body.id, function(newProject) {
+router.post('/delete/:projectId', function(req, res) {
+    let id = req.body.id;
+    let token = req.cookies.auth;
+    jwt.verify(token, config.secret, function (err, data){
+        _dbo.deleteProjectAndMilestones(id)
         res.redirect('/project/');
+        
     });
+    
 });
 
 module.exports = router;

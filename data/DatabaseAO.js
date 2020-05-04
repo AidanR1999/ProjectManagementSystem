@@ -15,7 +15,7 @@ class DatabaseAO {
     init() {
 
 
-       this.Users.loadDatabase(function (err) {
+        this.Users.loadDatabase(function (err) {
         // Callback is optional
         // Now commands will be executed
         console.log("finished", err);
@@ -30,7 +30,7 @@ class DatabaseAO {
             if (err) {
                 console.log("Projects finished", err);
             }
-          });
+        });
         this.Milestones.loadDatabase(function (err) {
             // Callback is optional
             // Now commands will be executed
@@ -38,7 +38,7 @@ class DatabaseAO {
             if (err) {
                 console.log("Milestones finished", err);
             }
-          });
+        });
 
 
     }
@@ -84,7 +84,6 @@ class DatabaseAO {
                     console.log("registered");
                     resolve(nUser);
                 }
-           
             });
         });
         
@@ -98,7 +97,7 @@ class DatabaseAO {
                     reject(err);
                     console("could not find user");
                 }
-                 else {
+                else {
 
                     var user = new User();
                     user._id = id;
@@ -208,35 +207,6 @@ class DatabaseAO {
         });
     }
 
-
-//     lookup(user, cb) {
-//         this.db.find({'user': user}, function (err, entries) {
-//             if (err) {
-//                 return cb(err, null);
-//             } else {
-//                 if (entries.length == 0) {
-//                     return cb(null, null);
-//                 }
-//                 return cb(null, entries[0]);
-//             }
-//         });
-//     }
-// }
-    
-    // getUserProjects(userId, cb) {
-    //         this.Projects.find({ownerId: userId}, function(err, docs) {
-    //             if(err) {
-    //                 return cb(err, null);    
-    //             } else {
-    //                 if (docs.lenght == 0) {
-    //                     return cb(null, null);
-    //                 }
-    //                 return cb(null, docs[0]);
-    //             }
-    //         });
-    //     }
-
-
     getUserProjects(userId) {
         return new Promise((resolve, reject) => {
             this.Projects.find({ownerId: userId}, (err, docs) => {
@@ -254,13 +224,29 @@ class DatabaseAO {
     createProject(project) {
         this.Projects.insert(project)
     }
-    updateProject(project, callback) {
-        //implement
+    updateProject(project) {
+        return new Promise((resolve, reject) =>{
+            this.Projects.update({_id: project._id},
+                { $set: {title: project.title, dueDate: project.dueDate,
+                    module : project.module, isComplete : project.isComplete, completionDate : project.completionDate  } },
+                {},
+                (err, project)=>{
+                    if(err){
+                        reject(err);
+                    }
+                    else{
+                        resolve(project);
+                    }
+                });
+        });
     }
-    deleteProject(id) {
-        this.Projects.remove({_id: id}, {});
+
+    deleteProjectAndMilestones(id){
+        this.Milestones.remove({projectId : id}, { multi: true })
+        this.Projects.remove({_id: id}, {})
     }
-    changeProjectPosition(project, callback) {
+
+    changeProjectPosition(project) {
         //implement
     }
 
@@ -336,6 +322,8 @@ class DatabaseAO {
     deleteMilestone(id) {
         this.Milestones.remove({_id: id},{});
     }
+
+    
 
     changeMilestonePosition(milestone) {
         //implement
