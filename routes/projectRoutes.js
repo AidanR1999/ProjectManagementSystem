@@ -221,4 +221,29 @@ router.post('/delete/:projectId', function(req, res) {
     
 });
 
+router.get('/view/:projectId', function(req, res) {
+    //get url
+    var url = req.originalUrl;
+
+    //if url ends with /, remove /
+    if(url.endsWith('/')) {
+        url = url.substring(0, url.length - 1);
+    }
+
+    //get id from url
+    let id = url.substring(url.lastIndexOf('/') + 1);
+
+    //display project information
+    _dbo.getProject(id)
+        .then((project) => {
+            _dbo.getProjectMilestones(id)
+                .then((milestones) => {
+                    res.render('view', {
+                        "project" : project,
+                        "milestones" : milestones
+                    });
+                });
+            });
+});
+
 module.exports = router;
