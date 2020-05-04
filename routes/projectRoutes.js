@@ -19,26 +19,33 @@ router.get('/', function (req, res) {
             res.redirect('http://localhost:3000/')
         } else {
             console.log("verified");
-            _dbo.getUserProjects(data._id)
-                .then((projects) => {
-                    console.log(projects);
-                    console.log("got projects");
-                    res.render('projects', {
-                            "projects": projects}
+            _dbo.getUserProjectsInComplete(data._id)
+                .then((incompleteProjects) => {
+                    _dbo.getUserProjectsComplete(data._id)
+                    .then((completeProjects) => {
+                            console.log(incompleteProjects);
+                            console.log(completeProjects);
+                            console.log("got projects");
+                            res.render('projects', {
+                            "incompleteProjects": incompleteProjects,
+                            "completeProjects" : completeProjects}
                         );
+                    })
+                    
                 })
                 .catch((err) => {
                     console.log("Error:");
                     console.log(JSON.stringify(err));
                     res.redirect('/views/error.html');
                 });
+                
         }
     });
 });
 
 router.get('/edit/:projectId/', function (req, res) {
-   var id = req.params.projectId;
-   var token = req.cookies.auth;
+    var id = req.params.projectId;
+    var token = req.cookies.auth;
     jwt.verify(token, config.secret, (err, data) => {
         if(err) {
             console.log("could not verify");
@@ -191,6 +198,8 @@ router.post('/create', function(req, res) {
         console.log("Creating a project...");
         var project = new Project();
         project.title = req.body.title;
+        project.isComplete = false;
+        console.log("is Project complete? : " + project.isComplete);
         console.log("Project Title is " + project.title);
         project.module = req.body.module;
         console.log("Project Module is " + project.title);
