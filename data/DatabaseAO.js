@@ -211,6 +211,7 @@ class DatabaseAO {
     createProject(project) {
         this.Projects.insert(project)
     }
+
     updateProject(project) {
         return new Promise((resolve, reject) =>{
             this.Projects.update({_id: project._id},
@@ -249,19 +250,6 @@ class DatabaseAO {
                     resolve(doc);
                 }
             });
-        });
-    }
-    getProjectAndMilestones(projectId){
-        return new Promise((resolve, reject) => {
-            this.Projects.findOne({_id: projectId}, (err, doc) => {
-                if(err) {
-                    reject(err);
-                    console.log("could not find project");
-                } else {
-                    resolve(doc);
-                }
-            });
-            
         });
     }
 
