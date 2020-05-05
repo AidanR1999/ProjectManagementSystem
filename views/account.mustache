@@ -27,11 +27,11 @@
                 </div>
             </div>
         </form>
-        <form action="/changepassword" method="post" style="border: solid 2px blue; padding: 5%;">
+        <form action="/changepassword" method="post" onsubmit="return checkPassword()" style="border: solid 2px blue; padding: 5%;">
             <h1>Change Password</h1>
             <div class="form-group">
                 <label>New Password:</label>
-                <input type="password" class="form-control" placeholder="New Password" id="password" name="password">
+                <input type="password" class="form-control" placeholder="New Password" id="pass" name="password">
             </div>
             <div class="form-group">
                 <label>Confirm New Password:</label>
@@ -68,6 +68,22 @@
             }
         });
     });
+
+    function checkPassword() {
+		var password = document.getElementById("pass").value;
+		console.log(password);
+		var confPassword = document.getElementById("confirmPassword").value;
+		console.log(confPassword);
+		if (password != confPassword) {
+			alert("Passwords must match");
+			console.log("false");
+			return false;
+		} else {
+			document.register.submit();
+			console.log("true");
+			return;
+		}
+	}
 </script>
 
 {{>footer}}
