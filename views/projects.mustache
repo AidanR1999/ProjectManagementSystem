@@ -5,7 +5,7 @@
     {{! <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css"> }}
     <!--Font Awesome 5-->
     <script src="https://kit.fontawesome.com/2cf49272b2.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.6.0/Sortable.js"></script>
+    {{! <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.6.0/Sortable.js"></script> }}
     <meta charset="utf-8">
     <title>My Projects</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/thomaspark/bootswatch@v3.4.1/lumen/bootstrap.min.css">
@@ -35,22 +35,23 @@
                 <form action="/project/create">
                     <button class="btn btn-primary btn-block" type="submit" class="form-control"> Create
                         Project</button>
+                </form>
             </div>
         </div>
         <ul id="myTab" class="nav nav-tabs">
             <li class="tab-item">
-                <a href="#incomplete" class="nav-link active" data-toggle="tab" id="incl_proj_act">Incomplete
-                    Projects</a>
+                <a href="#incomplete" class="nav-link active" data-toggle="tab" id="incl_proj_act">
+                Incomplete Projects</a>
             </li>
             <li class="nav-item">
-                <a href="#complete" class="nav-link" data-toggle="tab">Complete Projects</a>
+                <a href="#complete" class="nav-link " data-toggle="tab">Complete Projects</a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane fade show active" id="incomplete">
+            <div class="tab-pane fade" id="incomplete">
                 <ul style="list-style-type:none;" id="items">
-                    <br>
+                    
                     {{#incompleteProjects}}
                     <li>
                         <div class="container">
@@ -74,7 +75,7 @@
                                         <div class="btn-group">
                                             <form action="/project/complete/{{_id}}" method="post">
                                                 <input type="hidden" id="id" name="id" value="{{_id}}">
-                                                <button type="submit" class="btn btn-success mr-2">
+                                                <button type="submit" class="btn btn-success">
                                                     Complete
                                                 </button>
                                             </form>
@@ -91,7 +92,7 @@
                         </div>
                     </li>
                     {{/incompleteProjects}}
-                    <br>
+                
                 </ul>
             </div>
             <div class="tab-pane fade" id="complete">
@@ -198,7 +199,7 @@
         });
     })
 
-
+document.getElementById('incl_proj_act').click()
 
 </script>
 
