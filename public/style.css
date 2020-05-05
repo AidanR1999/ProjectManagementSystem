@@ -1,0 +1,26 @@
+html {
+    font-size: 100% !important;
+}
+
+  
+
+.container-projects {
+    width: 100% !important;
+
+}
+
+.container-fluid {
+    max-width: 70%;
+}
+
+.features-blue {
+    background-image: url('/img/project2.jpg') !important;
+    min-height: 250px;
+    background-position: center;
+    margin-bottom: 8px;
+}
+
+html body div.container-projrcts div.container-fluid div.features-blue div.container div.intro h2.text-center {
+    color: azure;
+    text-shadow: 2px 2px #a3a1a1;
+}

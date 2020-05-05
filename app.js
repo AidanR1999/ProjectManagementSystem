@@ -25,7 +25,8 @@ app.set('port', process.env.PORT || 3000);
 app.engine("mustache", mustache());
 app.set("view engine", "mustache");
 app.set("views", path.resolve(__dirname, "views"));
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded());
