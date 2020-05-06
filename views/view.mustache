@@ -1,0 +1,50 @@
+{{>header}}
+
+<div class="container">
+{{#project}}
+  
+        <div class="row">
+          <div class="form-group">
+            <label>Project Name:</label>
+            <input type="text" class="form-control" value={{title}} disabled name="title">
+          </div>
+          <div class="form-group">
+              <label>Module:</label>
+              <input type="text" class="form-control" value={{module}} disabled name="module">
+          </div>
+          <div class="form-group">
+              <label>Due Date:</label>
+              <input type="text" class="form-control" value={{dueDate}} disabled name="dueDate">
+          </div>
+        </div>
+
+  {{/project}}
+</div>
+
+<div class="container">
+  {{#milestones}}
+            <div class="container">
+              <div class="row">
+                <div class="card w-75">
+                    <div class="card-body">
+                    <div class="col-4">
+                      <label><b>Milestone name:</b></label>
+                      <p>{{name}}</p>
+                    </div>
+                    <div class="col-4">
+                      <label><b>Is complete:</b></label>
+                      <p>{{isComplete}}</p>
+                    </div>
+                    <div class="col-4">
+                      <label><b>Completion date:</b></label>
+                      <p>{{completionDate}}</p>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>
+  {{/milestones}}
+</div>
+
+
+{{>footer}}
