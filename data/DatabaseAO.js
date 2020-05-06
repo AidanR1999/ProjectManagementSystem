@@ -105,7 +105,7 @@ class DatabaseAO {
                     reject(err);
                     console.log("nedb error");
                 } 
-                // TODO
+                
                 if(doc == null) {
                     reject( new Error('no user found'));
                     console.log("This should return that user not found");
@@ -190,7 +190,7 @@ class DatabaseAO {
             });
         });
     }
-
+    //finds completed projects
     getUserProjectsComplete(userId) {
         return new Promise((resolve, reject) => {
             this.Projects.find( {ownerId: userId, isComplete : true}, (err, docs) => {
@@ -204,6 +204,7 @@ class DatabaseAO {
         });
     }
 
+    //finds incomplete projects
     getUserProjectsInComplete(userId) {
         return new Promise((resolve, reject) => {
             this.Projects.find( {ownerId: userId, isComplete : false}, (err, docs) => {
@@ -217,6 +218,7 @@ class DatabaseAO {
         });
     }
 
+    //finds all users projects ---- not used anymore
     getUserProjects(userId) {
         return new Promise((resolve, reject) => {
             this.Projects.find( {ownerId: userId}, (err, docs) => {
@@ -231,7 +233,7 @@ class DatabaseAO {
     }
     
     
-
+    //create project
     createProject(project) {
         this.Projects.insert(project)
     }
@@ -253,6 +255,7 @@ class DatabaseAO {
         });
     }
 
+    //deletes project and its milestones
     deleteProjectAndMilestones(id){
         this.Milestones.remove({projectId : id}, { multi: true })
         this.Projects.remove({_id: id}, {})
@@ -277,6 +280,7 @@ class DatabaseAO {
         });
     }
 
+    //find milestones for the project
     getProjectMilestones(projectId) {
         return new Promise((resolve, reject) => {
             this.Milestones.find({projectId: projectId}, (err, docs) => {
@@ -289,6 +293,8 @@ class DatabaseAO {
             });
         });
     }
+
+    //create milestone
     createMilestone(milestone) {
         return new Promise((resolve, reject) =>{
             this.Milestones.insert(milestone, (err, newMilestone) => {
@@ -302,6 +308,7 @@ class DatabaseAO {
         });
     }
 
+    //update milestone
     updateMilestone(milestone) {
         return new Promise((resolve, reject) =>{
             this.Milestones.update({_id: milestone._id},
@@ -318,6 +325,7 @@ class DatabaseAO {
         });
     }
 
+    //deletes milestone
     deleteMilestone(id) {
         this.Milestones.remove({_id: id},{});
     }
