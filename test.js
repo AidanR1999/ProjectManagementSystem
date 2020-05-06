@@ -2,6 +2,7 @@ const User = require('./models/User');
 const Project = require('./models/Project');
 const Milestone = require('./models/Milestone');
 const _dbo = require('./data/DatabaseAO');
+_dbo.init();
 
 //dependencies
 let userId = "";
