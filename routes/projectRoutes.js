@@ -8,11 +8,8 @@ var config = require("../config");
 var router = express.Router();
 
 router.get('/', function (req, res) {
-    console.log("redirected");
     var token = req.cookies.auth;
-    console.log("in project root, token", token);
 
-    console.log(token);
     jwt.verify(token, config.secret, (err, data) => {
         if(err) {
             console.log("could not verify");
@@ -23,8 +20,6 @@ router.get('/', function (req, res) {
                 .then((incompleteProjects) => {
                     _dbo.getUserProjectsComplete(data._id)
                     .then((completeProjects) => {
-                            console.log(incompleteProjects);
-                            console.log(completeProjects);
                             console.log("got projects");
                             res.render('projects', {
                             "incompleteProjects": incompleteProjects,
@@ -43,6 +38,7 @@ router.get('/', function (req, res) {
     });
 });
 
+// edit project GET
 router.get('/edit/:projectId/', function (req, res) {
     var id = req.params.projectId;
     var token = req.cookies.auth;
@@ -65,6 +61,7 @@ router.get('/edit/:projectId/', function (req, res) {
     });
 });
 
+// complete project
 router.post('/complete/:projectId/', function(req, res){
     let id = req.params.projectId;
     let token = req.cookies.auth;
@@ -98,6 +95,7 @@ router.post('/complete/:projectId/', function(req, res){
 
 });
 
+// edit project POST
 router.post('/edit/:projectId/', function(req, res){
     let id = req.params.projectId;
     let token = req.cookies.auth;
@@ -122,6 +120,7 @@ router.post('/edit/:projectId/', function(req, res){
     
 });
 
+// Add milestone POST
 router.post('/edit/:projectId/addmilestone', function(req, res){
     let id = req.params.projectId;
     let token = req.cookies.auth;
@@ -142,6 +141,7 @@ router.post('/edit/:projectId/addmilestone', function(req, res){
     
 });
 
+// delete milestone POST
 router.post('/edit/:projectId/deleteMilestone/:milestoneId', function(req, res){
     let id = req.params.projectId;
     let milId = req.params.milestoneId;
@@ -153,6 +153,7 @@ router.post('/edit/:projectId/deleteMilestone/:milestoneId', function(req, res){
     
 });
 
+// TBC
 router.post('/edit/:projectId/editMilestone/:milestoneId', function(req, res){
     let id = req.params.projectId;
     let milId = req.params.milestoneId;
@@ -185,33 +186,28 @@ router.post('/edit/:projectId/editMilestone/:milestoneId', function(req, res){
     
 })
 
+
+// create
 router.get('/create', function (req, res) {
     res.render('create', {});
 });
 
+
+// creatre project POST
 router.post('/create', function(req, res) {
     //get logged in user
     var token = req.cookies.auth;
     jwt.verify(token, config.secret, function(err, data) {
         //create project
-        console.log(data);
-        console.log("Creating a project...");
         var project = new Project();
         project.title = req.body.title;
         project.isComplete = false;
-        console.log("is Project complete? : " + project.isComplete);
-        console.log("Project Title is " + project.title);
         project.module = req.body.module;
-        console.log("Project Module is " + project.title);
         project.dueDate = req.body.dueDate;
-        console.log("Project Due Date is " + project.dueDate);
         project.ownerId = data._id;
-        console.log("Project owner ID is: " + project.ownerId);
         //add project to db
         _dbo.createProject(project, function(newProject) {
             console.log("project created");
-
-            //res.redirect('/project/');
         });
 
     });
@@ -219,6 +215,7 @@ router.post('/create', function(req, res) {
 
 });
 
+// delete project POST
 router.post('/delete/:projectId', function(req, res) {
     let id = req.body.id;
     let token = req.cookies.auth;
@@ -230,6 +227,7 @@ router.post('/delete/:projectId', function(req, res) {
     
 });
 
+// view project GET
 router.get('/view/:projectId', function(req, res) {
     //get url
     var url = req.originalUrl;
