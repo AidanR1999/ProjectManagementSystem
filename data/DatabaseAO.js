@@ -216,6 +216,19 @@ class DatabaseAO {
             });
         });
     }
+
+    getUserProjects(userId) {
+        return new Promise((resolve, reject) => {
+            this.Projects.find( {ownerId: userId}, (err, docs) => {
+                if(err) {
+                    reject(err);
+                    console.log("could not find project");
+                } else {
+                    resolve(docs);
+                }
+            });
+        });
+    }
     
     
 
