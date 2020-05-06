@@ -27,8 +27,6 @@ router.get('/account', function(req, res) {
 
 //login
 router.post('/login', function(req, res) {
-
-    console.log("started login");
     _dbo.login(req.body.email, req.body.password)
         .then((user) => {
 
@@ -53,7 +51,6 @@ router.post('/register', function(req, res) {
     newUser.lastName = req.body.lastName;
     newUser.email = req.body.email;
 
-    console.log("makes it here");
     var cookie = req.cookies.auth;
 
     _dbo.getUserByEmail(newUser.email)
