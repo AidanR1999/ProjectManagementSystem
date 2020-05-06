@@ -1,7 +1,6 @@
 const Datastore = require("nedb");
 var bcrypt = require('bcryptjs');
 var User = require('../models/User');
-const path = require('path');
 
 
 class DatabaseAO {
@@ -12,8 +11,6 @@ class DatabaseAO {
     }
 
     init() {
-
-
         this.Users.loadDatabase(function (err) {
         // Callback is optional
         // Now commands will be executed
@@ -35,8 +32,6 @@ class DatabaseAO {
                 console.log("Milestones finished", err);
             }
         });
-
-
     }
 
     //user functions
