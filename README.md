@@ -7,6 +7,8 @@ We chose to host it on digital ocean VPS, with Ubuntu running Nginx as a reliabl
 
 To install and use locally you will need Node and npm.
 
+NOTE: Link sharing feature will only work on the above hosted domain. This feature allows the user to generate a link for others to view their existing project.
+
 Our app allows students to create / edit and manage listings of coursework including:
 
 * title
