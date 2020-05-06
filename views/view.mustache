@@ -1,20 +1,25 @@
-{{>header}}
+<header>
+  <link rel="stylesheet" href="/Navigation-Clean.css">
+  <link rel="stylesheet" href="/style.css">
 
+</header>
+
+<br/>
 <div class="container">
 {{#project}}
   
         <div class="row">
           <div class="form-group">
             <label>Project Name:</label>
-            <input type="text" class="form-control" value={{title}} disabled name="title">
+            <input type="text" class="form-control" disabled value="{{title}}">
           </div>
           <div class="form-group">
               <label>Module:</label>
-              <input type="text" class="form-control" value={{module}} disabled name="module">
+              <input type="text" class="form-control" disabled value="{{module}}">
           </div>
           <div class="form-group">
               <label>Due Date:</label>
-              <input type="text" class="form-control" value={{dueDate}} disabled name="dueDate">
+              <input type="text" class="form-control" disabled value="{{dueDate}}">
           </div>
         </div>
 
@@ -45,6 +50,8 @@
             </div>
   {{/milestones}}
 </div>
+
+
 
 
 {{>footer}}
