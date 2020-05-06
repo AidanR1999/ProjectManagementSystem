@@ -20,3 +20,4 @@ Coursework can also be rearranged by drag and drop using the handlebars.
 
 App has all the usual basic functionality such as user accounts (login/register), encrypted passwords, sessions, database and makes use of number of various libraries. 
 
+Unit tests for DatabaseAO is on test.js. Run node test.js on terminal
